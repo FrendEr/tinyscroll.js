@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>tinyscroll demo</title>
+        <link rel="stylesheet" href="./tinyscroll.css" media="screen" title="no title" charset="utf-8">
+        <style media="screen">
+        .input-group {
+            padding: 10px;
+            overflow: hidden;
+        }
+        input[type="text"] {
+            float: left;
+            border: 1px solid #ddd;
+            width: 120px;
+            height: 30px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        button {
+            float: left;
+            margin-left: 10px;
+            border: none;
+            background-color: #05b47a;
+            color: #fff;
+            height: 30px;
+            width: 100px;
+            border-radius: 5px;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <span class="date-tips"></span>
+        <script src="./node_modules/jquery/dist/jquery.min.js" charset="utf-8"></script>
+        <script src="./tinyscroll.js" charset="utf-8"></script>
+        <script type="text/javascript">
+        /*
+         * test code
+         */
+        var ts = new TinyScroll({
+            title: 'tinyscroll.js demo',
+            wrapper: '#container',
+            targets: '.ts-item-list',
+            range: ['1990-01-01', '2015-08-25'],
+            initDate: '2000-02-20'
+        });
+        </script>
+    </body>
+</html>

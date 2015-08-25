@@ -1,0 +1,31 @@
+{
+  "name": "tinyscroll.js",
+  "version": "0.0.1",
+  "description": "a tiny scroll pluginn for mobile device.",
+  "main": "tinyscroll.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrendEr/tinyscroll.js.git"
+  },
+  "keywords": [
+    "scroll",
+    "date",
+    "time",
+    "datepicker",
+    "timepicker"
+  ],
+  "author": "Frend",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FrendEr/tinyscroll.js/issues"
+  },
+  "homepage": "https://github.com/FrendEr/tinyscroll.js#readme",
+  "dependencies": {
+    "animate.css": "^3.4.0",
+    "jquery": "^2.1.4",
+    "zepto": "0.0.4"
+  }
+}
