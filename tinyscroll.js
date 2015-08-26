@@ -193,7 +193,7 @@
             // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
             // day list fix
-            this.dayListFix();
+            this.dayListFix('year');
         },
 
         /*
@@ -204,7 +204,7 @@
             // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
             // day list fix
-            this.dayListFix();
+            this.dayListFix('month');
         },
 
         /*
@@ -223,6 +223,9 @@
             var dayTarget = this.$wrapper.find('#day'),
                 originalLength = dayTarget.children().length,
                 newLength = this.getMonthDays(this.stateTree.year, this.stateTree.month - 1);
+
+            var maxDate = this.getMaxDate(),
+                minDate = this.getMinDate();
 
             if (newLength > originalLength) {
                 for (var i = originalLength + 1; i <= newLength; i++) {
