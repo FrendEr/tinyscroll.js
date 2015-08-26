@@ -1,4 +1,3 @@
-
 /*
  * ===============================================
  *
@@ -190,27 +189,51 @@
          * year change callback
          */
         yearChanged: function(e) {
-            // console.log('year change to : ' + this.stateTree.year);
-            // update list position
+            console.log('year change to : ' + this.stateTree.year);
+            // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
+            // day list fix
+            this.dayListFix();
         },
 
         /*
          * month change callback
          */
         monthChanged: function(e) {
-            // console.log('month changed to : ' + this.stateTree.month);
-            // update list position
+            console.log('month ' + this.stateTree.month + ' changed to : ' + this.stateTree.month);
+            // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
+            // day list fix
+            this.dayListFix();
         },
 
         /*
          * day change callback
          */
         dayChanged: function(e) {
-            // console.log('day changed to : ' + this.stateTree.day);
-            // update list position
+            console.log('day changed to : ' + this.stateTree.day);
+            // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
+        },
+
+        /*
+         * day list fix
+         */
+        dayListFix: function(type) {
+            var dayTarget = this.$wrapper.find('#day'),
+                originalLength = dayTarget.children().length,
+                newLength = this.getMonthDays(this.stateTree.year, this.stateTree.month - 1);
+
+            if (newLength > originalLength) {
+                for (var i = originalLength + 1; i <= newLength; i++) {
+                    dayTarget.append('<li data-index="' + i + '">' + i + '</li>');
+                }
+            } else {
+                for (var j = 0; j < originalLength - newLength; j ++) {
+                    dayTarget.children().last().remove();
+                }
+                this.setState({ day: dayTarget.children().last().data('index') });
+            }
         },
 
         /*
