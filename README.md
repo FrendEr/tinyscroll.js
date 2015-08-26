@@ -1,63 +1,59 @@
 # Tinyscroll.js
 
-> 一个仿iphone风格的简易日历插件，目前仅支持触屏设备。
+> A tiny scroll-datepicker plugin for mobile device.
 
 ![demo](./demo.png)
 
-## 温馨提示
 
-> 如果这个插件对你有帮助，请给予`star` :star: :up:
+## Props
 
+- **title** (optional)
 
-## 参数配置
-
-- **title** (可选)
-
-> 日历标题
+> datepicker title
 
 - **wrapper**
 
-> 包含日历插件的根元素
+> root element to wrap datepicker
 
 - **range**
 
-> 日期区间，例如：['2010', '2015']
+> date range, ['2010', '2015'] etc.
 
-- **initDate** (可选)
+- **initDate** (optional)
 
-> 初始日期，例如：'2012-08-01'
+> initialize date, '2012-08-01' etc.
 
-- **year** (可选)
+- **year** (optional)
 
-> 设置`stateTree`状态树的`year`
+> initialize `stateTree`'s `year`
 
-- **month** (可选)
+- **month** (optional)
 
-> 设置`stateTree`状态树的`month`
+> initialize `stateTree`'s `month`
 
-- **day** (可选)
+- **day** (optional)
 
-> 设置`stateTree`状态树的`day`
+> initialize `stateTree`'s `day`
 
 ----------------------------
-###### *关于`stateTree`状态树：插件中的日历数据、动画、DOM调整全部通过`stateTree`控制，通过`setState`修改状态树的时候会触发`stateTree`的更新、DOM的更新以及页面重绘. *
+###### What is `stateTree` about? *the `year`, `month`, `day` is control by the `stateTree`, when custom update the `stateTree` via `setState` method, the DOM tree will rerender, also when we swipe the scroll-datepicker, it will update the `stateTree` autonamicly.*
 ----------------------------
 
 
-## 使用方法
+## Usage
 
 ```js
 
 var ts = new TinyScroll({
     title: 'tinyscroll.js demo',
     wrapper: '#container',
-    range: ['1990', '2015'],
-    initDate: '2000-02-20'
+    range: ['2000-08-10', '2016-05-06'],
+    initDate: '2012-07-20'
 });
 
 ```
 
-## 本地演示
+## Run demo
 
 ```js
 

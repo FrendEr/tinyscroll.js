@@ -43,6 +43,10 @@ ul {
     left: 0;
 }
 
+.tiny-scroll .ts-body .ts-col .ts-item-list .disable {
+    color: transparent;
+}
+
 .tiny-scroll .ts-footer .btns-wrapper {
     height: 40px;
     line-height: 40px;

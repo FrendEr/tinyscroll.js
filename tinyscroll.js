@@ -21,29 +21,33 @@
     'use strict';
 
     var CHILD_HEIGHT  = 30;     // 30px
-    var DURATION_TIME = 200;    // 200ms
+    var DURATION_TIME = 50;     // 50ms
 
     function TinyScroll(options) {
-        this.options      = $.extend({}, options);                      // options
-        this.$wrapper     = $(this.options.wrapper) || $(document);     // root element
-        this.$target      = null;                                       // the target element
-        this.targetTop    = 0;                                          // drag target's top
-        this.targetHeight = 0;                                          // drag target's height
-        this.childHeight  = CHILD_HEIGHT;                               // child element's height
-        this.freezing     = false;                                      // is freezing
-        this.moving       = false;                                      // is moving
-        this.curTopMap    = {};                                         // scroll item current top
-        this.oriTopMap    = {};                                         // scroll item original top
-        this.touchTime    = 0;                                          // touch start timestamp
-        this.touchY       = 0;                                          // touch start point postion
-        this.timeGap      = 0;                                          // time gap
-        this.moveState    = 'down';                                     // move state, up or down
-        this.stateTree    = {                                           // state tree
+        this.options       = $.extend({}, options);                      // options
+        this.$wrapper      = $(this.options.wrapper) || $(document);     // root element
+        this.$target       = null;                                       // the target element
+        this.targetTop     = 0;                                          // drag target's top
+        this.targetHeight  = 0;                                          // drag target's height
+        this.childHeight   = CHILD_HEIGHT;                               // child element's height
+        this.freezing      = false;                                      // is freezing
+        this.moving        = false;                                      // is moving
+        this.curTopMap     = {};                                         // scroll item current top
+        this.oriTopMap     = {};                                         // scroll item original top
+        this.touchTime     = 0;                                          // touch start timestamp
+        this.touchY        = 0;                                          // touch start point postion
+        this.timeGap       = 0;                                          // time gap
+        this.moveState     = 'down';                                     // move state, up or down
+        this.mTopLocked    = false;                                      // month scroll to top locked
+        this.mBottomLocked = false;                                      // month scroll to bottom locked
+        this.dTopLocked    = false;                                      // day scroll to top locked
+        this.dBottomLocked = false;                                      // day scroll to bottom locked
+        this.stateTree     = {                                           // state tree
             year:  this.options.year  || 10000,
             month: this.options.month || 10000,
             day:   this.options.day   || 10000
         };
-        this.fnList       = {                                           // function list
+        this.fnList        = {                                           // function list
             year:  this.yearChanged,
             month: this.monthChanged,
             day:   this.dayChanged
@@ -181,6 +185,19 @@
                 if (this.stateTree[prop] && props[prop] !== this.stateTree[prop]) {
                     this.stateTree[prop] = props[prop];
                     this.fnList[prop].call(this);
+
+                    if (this.mTopLocked && props[prop] < this.stateTree[prop]) {
+                        console.info('Month top has locked! Do not move!');
+                    }
+                    if (this.dTopLocked && props[prop] < this.stateTree[prop]) {
+                        console.info('Day top has locked! Do not move!');
+                    }
+                    if (this.mBottomLocked && props[prop] > this.stateTree[prop]) {
+                        console.info('Month bottom has locked! Do not move!');
+                    }
+                    if (this.dBottomLocked && props[prop] > this.stateTree[prop]) {
+                        console.info('Day bottom has locked! Do not move!');
+                    }
                 }
             }
         },
@@ -192,19 +209,21 @@
             console.log('year change to : ' + this.stateTree.year);
             // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
-            // day list fix
-            this.dayListFix('year');
+            // month && day list fix
+            this.monthListFix();
+            this.dayListFix();
         },
 
         /*
          * month change callback
          */
         monthChanged: function(e) {
-            console.log('month ' + this.stateTree.month + ' changed to : ' + this.stateTree.month);
+            console.log('month changed to : ' + this.stateTree.month);
             // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
-            // day list fix
-            this.dayListFix('month');
+            // month && day list fix
+            this.monthListFix();
+            this.dayListFix();
         },
 
         /*
@@ -214,20 +233,87 @@
             console.log('day changed to : ' + this.stateTree.day);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
+            this.dayListFix();
+        },
+
+        /*
+         * month list fix
+         */
+        monthListFix: function() {
+            var monthTarget = this.$wrapper.find('#month'),
+                maxDate = this.getMaxDate(),
+                minDate = this.getMinDate();
+
+            // minimum date
+            var minMonth = minDate.getMonth();
+            if (this.stateTree.year == minDate.getFullYear()) {
+                console.log('reach min year');
+                this.disablePrevItems('month', minMonth);
+
+                if (this.stateTree.month <= minMonth) {
+                    this.mTopLocked = true;
+                    this.setState({ month: minMonth + 1 });
+                }
+            } else {
+                this.enablePrevItems('month', minMonth);
+                this.mTopLocked = false;
+
+                // maximum date
+                var maxMonth = maxDate.getMonth();
+                if (this.stateTree.year == maxDate.getFullYear()) {
+                    console.log('reach max year');
+                    this.disableNextItems('month', maxMonth);
+
+                    if (this.stateTree.month > maxMonth) {
+                        this.mBottomLocked = true;
+                        this.setState({ month: maxMonth + 1 });
+                    }
+                } else {
+                    this.enableNextItems('month', maxMonth);
+                    this.mBottomLocked = false;
+                }
+            }
         },
 
         /*
          * day list fix
          */
-        dayListFix: function(type) {
+        dayListFix: function() {
             var dayTarget = this.$wrapper.find('#day'),
                 originalLength = dayTarget.children().length,
-                newLength = this.getMonthDays(this.stateTree.year, this.stateTree.month - 1);
-
-            var maxDate = this.getMaxDate(),
+                newLength = this.getMonthDays(this.stateTree.year, this.stateTree.month - 1),
+                maxDate = this.getMaxDate(),
                 minDate = this.getMinDate();
 
+            // minimum date
+            var minDay = minDate.getDate();
+            if (this.stateTree.year == minDate.getFullYear() &&  this.stateTree.month == (minDate.getMonth() + 1)) {
+                console.log('reach min month');
+                this.disablePrevItems('day', minDay - 1);
 
+                if (this.stateTree.day < minDay) {
+                    this.dTopLocked = true;
+                    this.setState({ day: minDay });
+                }
+            } else {
+                this.enablePrevItems('day', minDay - 1);
+                this.dTopLocked = false;
+
+                // maximum date
+                var maxDay = maxDate.getDate();
+                if (this.stateTree.year == maxDate.getFullYear() && this.stateTree.month == (maxDate.getMonth() + 1)) {
+                    console.log('reach max month');
+                    this.disableNextItems('day', maxDay - 1);
+
+                    if (this.stateTree.day > maxDay) {
+                        this.dBottomLocked = true;
+                        this.setState({ day: maxDay });
+                    }
+                } else {
+                    this.enableNextItems('day', maxDay - 1);
+                    this.dBottomLocked = false;
+                }
+            }
 
             if (newLength > originalLength) {
                 for (var i = originalLength + 1; i <= newLength; i++) {
@@ -241,6 +327,34 @@
                     this.setState({ day: dayTarget.children().last().data('index') });
                 }
             }
+        },
+
+        /*
+         * disable month or day list items which overflow
+         */
+        disablePrevItems: function(type, index) {
+            this.$wrapper.find('#' + type).children().eq(index).prevAll().addClass('disable');
+        },
+
+        /*
+         * disable month or day list items which overflow
+         */
+        disableNextItems: function(type, index) {
+            this.$wrapper.find('#' + type).children().eq(index).nextAll().addClass('disable');
+        },
+
+        /*
+         * enable moth or day list items
+         */
+        enablePrevItems: function(type, index) {
+            this.$wrapper.find('#' + type).children().prevAll('.disable').removeClass('disable');
+        },
+
+        /*
+         * enable moth or day list items
+         */
+        enableNextItems: function(type, index) {
+            this.$wrapper.find('#' + type).children().nextAll('.disable').removeClass('disable');
         },
 
         /*

@@ -1,7 +1,7 @@
 {
   "name": "tinyscroll.js",
-  "version": "0.0.2",
-  "description": "a tiny scroll pluginn for mobile device.",
+  "version": "0.0.3",
+  "description": "a tiny scroll plugin to select date for mobile device.",
   "main": "tinyscroll.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/FrendEr/tinyscroll.js#readme",
   "dependencies": {
     "animate.css": "^3.4.0",
-    "jquery": "^2.1.4",
-    "zepto": "0.0.4"
+    "jquery": "^2.1.4"
   }
 }
