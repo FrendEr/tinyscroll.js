@@ -1,6 +1,6 @@
 {
   "name": "tinyscroll.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a tiny scroll pluginn for mobile device.",
   "main": "tinyscroll.js",
   "scripts": {

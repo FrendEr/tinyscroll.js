@@ -227,15 +227,19 @@
             var maxDate = this.getMaxDate(),
                 minDate = this.getMinDate();
 
+
+
             if (newLength > originalLength) {
                 for (var i = originalLength + 1; i <= newLength; i++) {
                     dayTarget.append('<li data-index="' + i + '">' + i + '</li>');
                 }
-            } else {
+            } else if (newLength < originalLength) {
                 for (var j = 0; j < originalLength - newLength; j ++) {
                     dayTarget.children().last().remove();
                 }
-                this.setState({ day: dayTarget.children().last().data('index') });
+                if (dayTarget.children().last().data('index') <= this.stateTree.day) {
+                    this.setState({ day: dayTarget.children().last().data('index') });
+                }
             }
         },
 
