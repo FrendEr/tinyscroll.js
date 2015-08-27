@@ -8,6 +8,24 @@ ul {
     list-style: none;
 }
 
+.tiny-scroll-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.tiny-scroll {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: 1001;
+}
+
 .tiny-scroll .ts-header {
     font-size: 20px;
     height: 40px;
@@ -54,6 +72,7 @@ ul {
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     text-align: center;
+    background-color: #fff;
 }
 
 .tiny-scroll .ts-footer .btns-wrapper span {
@@ -63,6 +82,7 @@ ul {
 
 .tiny-scroll .ts-footer .btns-wrapper span:first-child {
     border-right: 1px solid #eee;
+    color: #666;
 }
 
 .tiny-scroll .ts-footer .btns-wrapper span:last-child {

@@ -25,7 +25,7 @@
 
     function TinyScroll(options) {
         this.options       = $.extend({}, options);                      // options
-        this.$wrapper      = $(this.options.wrapper) || $(document);     // root element
+        this.$wrapper      = $(this.options.wrapper);                    // root element
         this.$target       = null;                                       // the target element
         this.targetTop     = 0;                                          // drag target's top
         this.targetHeight  = 0;                                          // drag target's height
@@ -47,6 +47,11 @@
             month: this.options.month || 10000,
             day:   this.options.day   || 10000
         };
+        this.stateCache    = {                                           // state tree cache
+            year:  this.options.year  || 10000,
+            month: this.options.month || 10000,
+            day:   this.options.day   || 10000
+        };
         this.fnList        = {                                           // function list
             year:  this.yearChanged,
             month: this.monthChanged,
@@ -61,6 +66,7 @@
             var date = new Date(scope.options.initDate);
 
             scope.setState({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+            $.extend(scope.stateCache, scope.stateTree);
         }, 300);
     }
 
@@ -77,14 +83,39 @@
             }
 
             this.render();
-            this.eventBinding();
+        },
+
+        /*
+         * before tinyscroll render
+         */
+        beforeRender: function() {
+            if (this.$wrapper.children().length !== 0) {
+                this.$wrapper.find('.tiny-scroll-backdrop').show();
+                this.$wrapper.find('.tiny-scroll').addClass('fadeInUp');
+                return false;
+            }
         },
 
         /*
          * render app
          */
         render: function() {
-            var htmlTpl = ['<div class="tiny-scroll">',
+            var scope = this,
+                isEqual = this.diffState(scope.stateCache, scope.stateTree);
+
+            // if (!isEqual) {
+            //     $.extend(scope.stateCache, scope.stateTree);
+            //     scope.setState(scope.stateTree);
+            // }
+
+            if (this.$wrapper.children().length !== 0) {
+                this.$wrapper.find('.tiny-scroll-backdrop').show();
+                this.$wrapper.find('.tiny-scroll').removeClass('fadeOutDown').addClass('fadeInUp');
+                return;
+            }
+
+            var htmlTpl = ['<div class="tiny-scroll-backdrop"></div>',
+                            '<div class="tiny-scroll fadeInUp animated">',
                                 '<div class="ts-header">' + this.options.title + '</div>',
                                 '<div class="ts-body">',
                                     '<div class="ts-mask"></div>',
@@ -101,13 +132,33 @@
                                 '</div>',
                                 '<div class="ts-footer">',
                                     '<div class="btns-wrapper">',
-                                        '<span>取消</span>',
-                                        '<span>确定</span>',
+                                        '<span class="ts-cancel-btn">' + (this.options.cancelValue ? this.options.cancelValue : 'Cancel') + '</span>',
+                                        '<span class="ts-ok-btn">' + (this.options.okValue ? this.options.okValue : 'OK') + '</span>',
                                     '</div>',
                                 '</div>',
                             '</div>'].join('');
 
             this.$wrapper.append(htmlTpl);
+
+            this.eventBinding();
+        },
+
+        /*
+         * show the tinyscroll
+         */
+        show: function() {
+            this.render();
+        },
+
+        /*
+         * hide the tinyscroll
+         */
+        hide: function() {
+            var scope = this;
+
+            this.setState(scope.stateCache);
+            this.$wrapper.find('.tiny-scroll').removeClass('fadeInUp').addClass('fadeOutDown');
+            this.$wrapper.find('.tiny-scroll-backdrop').hide();
         },
 
         /*
@@ -200,6 +251,22 @@
                     }
                 }
             }
+        },
+
+        /*
+         * differ stateCache and stateTree
+         */
+        diffState: function(state1, state2) {
+            var isEqual = true;
+
+            for (var prop in state1) {
+                if (state1[prop] != state2[prop]) {
+                    isEqual = false;
+                    break;
+                }
+            }
+
+            return isEqual;
         },
 
         /*
@@ -363,6 +430,10 @@
         eventBinding: function() {
             var scope = this;
 
+            this.$wrapper.on('click', '.tiny-scroll-backdrop', function(e) {
+                scope.hide();
+            });
+
             this.$wrapper.on('touchstart touchmove touchend', '.ts-item-list', function(e) {
                 this.$target = $(e.target).hasClass('.ts-item-list') ? $(e.target) : $(e.target).parents('.ts-item-list');
 
@@ -376,6 +447,17 @@
                     default           :
                         break;
                 }
+            });
+
+            this.$wrapper.on('click', '.ts-cancel-btn', function() {
+                // $.extend(scope.stateTree, scope.stateCache);
+                scope.setState(scope.stateCache);
+                scope.hide();
+            });
+
+            this.$wrapper.on('click', '.ts-ok-btn', function() {
+                $.extend(scope.stateCache, scope.stateTree);
+                scope.hide();
             });
         },
 

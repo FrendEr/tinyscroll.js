@@ -1,6 +1,6 @@
 {
   "name": "tinyscroll.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "a tiny scroll plugin to select date for mobile device.",
   "main": "tinyscroll.js",
   "scripts": {
@@ -26,5 +26,8 @@
   "dependencies": {
     "animate.css": "^3.4.0",
     "jquery": "^2.1.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0"
   }
 }

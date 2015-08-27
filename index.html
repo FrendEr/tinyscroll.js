@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>tinyscroll demo</title>
+        <link rel="stylesheet" href="./node_modules/animate.css/animate.css" media="screen" title="no title" charset="utf-8">
         <link rel="stylesheet" href="./tinyscroll.css" media="screen" title="no title" charset="utf-8">
         <style media="screen">
         .input-group {
@@ -28,24 +29,32 @@
             height: 30px;
             width: 100px;
             border-radius: 5px;
+            margin-top: 20px;
         }
         </style>
     </head>
     <body>
         <div id="container"></div>
         <span class="date-tips"></span>
+        <button type="button" id="button">选择出行日期</button>
         <script src="./node_modules/jquery/dist/jquery.min.js" charset="utf-8"></script>
         <script src="./tinyscroll.js" charset="utf-8"></script>
         <script type="text/javascript">
-        /*
-         * test code
-         */
-        var ts = new TinyScroll({
-            title: 'tinyscroll.js demo',
-            wrapper: '#container',
-            range: ['2000-08-10', '2016-05-06'],
-            initDate: '2012-07-20'
-        });
+        var ts;
+        document.querySelector('#button').onclick = function() {
+            if (!ts) {
+                ts = new TinyScroll({
+                    title: '选择出行时间',
+                    wrapper: '#container',
+                    range: ['1900-01-01', '2015-01-01'],
+                    initDate: '2012-07-20',
+                    cancelValue: '取消',
+                    okValue: '确定'
+                });
+            } else {
+                ts.show();
+            }
+        }
         </script>
     </body>
 </html>

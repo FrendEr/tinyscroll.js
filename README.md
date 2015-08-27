@@ -35,6 +35,14 @@
 
 > initialize `stateTree`'s `day`
 
+- **cancelValue** (optional)
+
+> cancel button text
+
+- **okValue** (optional)
+
+> ok button text
+
 ----------------------------
 ###### What is `stateTree` about? *the `year`, `month`, `day` is control by the `stateTree`, when custom update the `stateTree` via `setState` method, the DOM tree will rerender, also when we swipe the scroll-datepicker, it will update the `stateTree` autonamicly.*
 ----------------------------
@@ -60,5 +68,13 @@ var ts = new TinyScroll({
 git clone https://github.com/FrendEr/tinyscroll.js.git
 cd tinyscroll.js
 open index.html
+
+```
+
+## Installation
+
+```js
+
+npm install tinyscroll.js [--save[-dev]]
 
 ```
