@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>tinyscroll demo</title>
         <link rel="stylesheet" href="./node_modules/animate.css/animate.css" media="screen" title="no title" charset="utf-8">
-        <link rel="stylesheet" href="./tinyscroll.css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="./src/tinyscroll.css" media="screen" title="no title" charset="utf-8">
         <style media="screen">
         .input-group {
             padding: 10px;
@@ -21,7 +21,6 @@
             font-weight: bold;
         }
         button {
-            float: left;
             margin-left: 10px;
             border: none;
             background-color: #05b47a;
@@ -31,14 +30,20 @@
             border-radius: 5px;
             margin-top: 20px;
         }
+        .date-tips {
+            display: block;
+            font-size: 14px;
+            line-height: 30px;
+            text-indent: 10px;
+        }
         </style>
     </head>
     <body>
         <div id="container"></div>
-        <span class="date-tips"></span>
         <button type="button" id="button">选择出行日期</button>
+        <p class="date-tips">已选择的日期：<span id="selectDate">yyyy-MM-DD</span></p>
         <script src="./node_modules/jquery/dist/jquery.min.js" charset="utf-8"></script>
-        <script src="./tinyscroll.js" charset="utf-8"></script>
+        <script src="./src/tinyscroll.js" charset="utf-8"></script>
         <script type="text/javascript">
         var ts;
         document.querySelector('#button').onclick = function() {
@@ -46,10 +51,13 @@
                 ts = new TinyScroll({
                     title: '选择出行时间',
                     wrapper: '#container',
-                    range: ['1900-01-01', '2015-01-01'],
+                    range: ['2010-03-09', '2015-01-01'],
                     initDate: '2012-07-20',
                     cancelValue: '取消',
-                    okValue: '确定'
+                    okValue: '确定',
+                    okCallback: function(date) {
+                        document.querySelector('#selectDate').innerHTML = date;
+                    }
                 });
             } else {
                 ts.show();

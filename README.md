@@ -43,6 +43,10 @@
 
 > ok button text
 
+- **okCallback**
+
+> click ok button callback function
+
 ----------------------------
 ###### What is `stateTree` about? *the `year`, `month`, `day` is control by the `stateTree`, when custom update the `stateTree` via `setState` method, the DOM tree will rerender, also when we swipe the scroll-datepicker, it will update the `stateTree` autonamicly.*
 ----------------------------
