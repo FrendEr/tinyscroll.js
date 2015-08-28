@@ -20,8 +20,8 @@
 
     'use strict';
 
-    var CHILD_HEIGHT  = 30;     // 30px
-    var DURATION_TIME = 50;     // 50ms
+    var CHILD_HEIGHT  = 30;     // px
+    var DURATION_TIME = 150;     // ms
 
     function TinyScroll(options) {
         this.options       = $.extend({}, options);                      // options
@@ -83,17 +83,6 @@
             }
 
             this.render();
-        },
-
-        /*
-         * before tinyscroll render
-         */
-        beforeRender: function() {
-            if (this.$wrapper.children().length !== 0) {
-                this.$wrapper.find('.tiny-scroll-backdrop').show();
-                this.$wrapper.find('.tiny-scroll').addClass('slideInUp');
-                return false;
-            }
         },
 
         /*
@@ -317,7 +306,7 @@
                 maxDate = this.getMaxDate(),
                 minDate = this.getMinDate();
 
-            // minimum date
+            // minimum month
             var minMonth = minDate.getMonth();
             if (this.stateTree.year == minDate.getFullYear()) {
                 console.log('reach min year');
@@ -328,10 +317,10 @@
                     this.setState({ month: minMonth + 1 });
                 }
             } else {
-                this.enablePrevItems('month', minMonth);
+                this.enablePrevItems('month');
                 this.mTopLocked = false;
 
-                // maximum date
+                // maximum month
                 var maxMonth = maxDate.getMonth();
                 if (this.stateTree.year == maxDate.getFullYear()) {
                     console.log('reach max year');
@@ -340,9 +329,10 @@
                     if (this.stateTree.month > maxMonth) {
                         this.mBottomLocked = true;
                         this.setState({ month: maxMonth + 1 });
+                        console.log(1);
                     }
                 } else {
-                    this.enableNextItems('month', maxMonth);
+                    this.enableNextItems('month');
                     this.mBottomLocked = false;
                 }
             }
@@ -358,7 +348,7 @@
                 maxDate = this.getMaxDate(),
                 minDate = this.getMinDate();
 
-            // minimum date
+            // minimum day
             var minDay = minDate.getDate();
             if (this.stateTree.year == minDate.getFullYear() &&  this.stateTree.month == (minDate.getMonth() + 1)) {
                 console.log('reach min month');
@@ -369,10 +359,10 @@
                     this.setState({ day: minDay });
                 }
             } else {
-                this.enablePrevItems('day', minDay - 1);
+                this.enablePrevItems('day');
                 this.dTopLocked = false;
 
-                // maximum date
+                // maximum day
                 var maxDay = maxDate.getDate();
                 if (this.stateTree.year == maxDate.getFullYear() && this.stateTree.month == (maxDate.getMonth() + 1)) {
                     console.log('reach max month');
@@ -383,7 +373,7 @@
                         this.setState({ day: maxDay });
                     }
                 } else {
-                    this.enableNextItems('day', maxDay - 1);
+                    this.enableNextItems('day');
                     this.dBottomLocked = false;
                 }
             }
@@ -406,27 +396,33 @@
          * disable month or day list items which overflow
          */
         disablePrevItems: function(type, index) {
-            this.$wrapper.find('#' + type).children().eq(index).prevAll().addClass('disable');
+            var target = this.$wrapper.find('#' + type);
+
+            target.children('.disable').removeClass('disable');
+            target.children().eq(index).prevAll().addClass('disable');
         },
 
         /*
          * disable month or day list items which overflow
          */
         disableNextItems: function(type, index) {
-            this.$wrapper.find('#' + type).children().eq(index).nextAll().addClass('disable');
+            var target = this.$wrapper.find('#' + type);
+
+            target.children('.disable').removeClass('disable');
+            target.children().eq(index).nextAll().addClass('disable');
         },
 
         /*
          * enable moth or day list items
          */
-        enablePrevItems: function(type, index) {
+        enablePrevItems: function(type) {
             this.$wrapper.find('#' + type).children().prevAll('.disable').removeClass('disable');
         },
 
         /*
          * enable moth or day list items
          */
-        enableNextItems: function(type, index) {
+        enableNextItems: function(type) {
             this.$wrapper.find('#' + type).children().nextAll('.disable').removeClass('disable');
         },
 

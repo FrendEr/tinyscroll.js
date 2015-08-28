@@ -62,7 +62,7 @@ ul {
 }
 
 .tiny-scroll .ts-body .ts-col .ts-item-list .disable {
-    color: transparent;
+    color: #aaa;
 }
 
 .tiny-scroll .ts-footer .btns-wrapper {
