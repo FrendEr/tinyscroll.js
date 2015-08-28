@@ -100,7 +100,7 @@
 
             var htmlTpl = ['<div class="tiny-scroll-backdrop"></div>',
                             '<div class="tiny-scroll slideInUp animated">',
-                                '<div class="ts-header">' + this.options.title + '</div>',
+                                (this.options.title ? '<div class="ts-header">' + this.options.title + '</div>' : ''),
                                 '<div class="ts-body">',
                                     '<div class="ts-mask"></div>',
                                     '<div class="ts-front"></div>',
@@ -265,6 +265,16 @@
         },
 
         /*
+         * highlight selected item
+         */
+        highlightSelected: function(type) {
+            var target = this.$wrapper.find('#' + type);
+
+            target.find('.selected').removeClass('selected');
+            target.find('li[data-index="' + this.stateTree[type] + '"]').addClass('selected');
+        },
+
+        /*
          * year change callback
          */
         yearChanged: function(e) {
@@ -274,6 +284,8 @@
             // month && day list fix
             this.monthListFix();
             this.dayListFix();
+
+            this.highlightSelected('year');
         },
 
         /*
@@ -286,6 +298,8 @@
             // month && day list fix
             this.monthListFix();
             this.dayListFix();
+
+            this.highlightSelected('month');
         },
 
         /*
@@ -296,6 +310,8 @@
             // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
             this.dayListFix();
+
+            this.highlightSelected('day');
         },
 
         /*

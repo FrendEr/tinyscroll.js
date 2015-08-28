@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: arial, verdana, sans-serif;
+    font-weight: normal;
 }
 
 ul {
@@ -39,7 +41,8 @@ ul {
     position: relative;
     background-color: #fff;
     overflow: hidden;
-    height: 150px;
+    height: 160px;
+    padding-top: 10px;
 }
 
 .tiny-scroll .ts-body .ts-col {
@@ -59,6 +62,11 @@ ul {
     width: 100%;
     top: 0;
     left: 0;
+}
+
+.tiny-scroll .ts-body .ts-col .ts-item-list .selected {
+    color: #05b47a;
+    font-weight: bold;
 }
 
 .tiny-scroll .ts-body .ts-col .ts-item-list .disable {
