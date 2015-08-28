@@ -4,6 +4,8 @@
 
 ![demo](./demo.png)
 
+![demo](./demo.gif)
+
 
 ## Props
 
