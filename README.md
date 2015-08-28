@@ -2,7 +2,8 @@
 
 > A tiny scroll-datepicker plugin for mobile device.
 
-**gif demo**
+**gif demo, loading . . .**
+
 ![demo](./demo.gif)
 
 
