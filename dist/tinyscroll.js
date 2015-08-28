@@ -21,7 +21,7 @@
     'use strict';
 
     var CHILD_HEIGHT  = 30;     // px
-    var DURATION_TIME = 150;     // ms
+    var DURATION_TIME = 150;    // ms
 
     function TinyScroll(options) {
         this.options       = $.extend({}, options);                      // options
@@ -513,7 +513,7 @@
             var offsetTop = this.getPointPos(e.originalEvent.touches[0]);
 
             this.curTopMap[target.data('target')] = offsetTop - this.touchY;
-            target.css('top', this.curTopMap[target.data('target')] + 'px');
+            target.css('transform', 'translateY(' + this.curTopMap[target.data('target')] + 'px)');
         },
 
         /*
@@ -533,58 +533,40 @@
             (function() {
                 // overflow top
                 if (curTop > CHILD_HEIGHT * 2) {
-                    target.animate({
-                        'top': CHILD_HEIGHT * 2 + 'px'
-                    }, DURATION_TIME, function() {
-                        scope.curTopMap[target.data('target')] = CHILD_HEIGHT * 2;
-                        scope.touchEndEvent(e, target);
-                    });
+                    target.css('transform', 'translateY(' + CHILD_HEIGHT * 2 + 'px)');
+                    scope.curTopMap[target.data('target')] = CHILD_HEIGHT * 2;
+                    scope.touchEndEvent(e, target);
                     return;
                 }
 
                 if (mod > (CHILD_HEIGHT / 2)) {
-                    target.animate({
-                        'top': (curTop + CHILD_HEIGHT - mod) + 'px'
-                    }, DURATION_TIME, function() {
-                        scope.curTopMap[target.data('target')] = curTop + CHILD_HEIGHT - mod;
-                        scope.touchEndEvent(e, target);
-                    });
+                    target.css('transform', 'translateY(' + (curTop + CHILD_HEIGHT - mod) + 'px)');
+                    scope.curTopMap[target.data('target')] = curTop + CHILD_HEIGHT - mod;
+                    scope.touchEndEvent(e, target);
                 } else {
-                    target.animate({
-                        'top': (curTop - mod) + 'px'
-                    }, DURATION_TIME, function() {
-                        scope.curTopMap[target.data('target')] = curTop - mod;
-                        scope.touchEndEvent(e, target);
-                    });
+                    target.css('transform', 'translateY(' + (curTop - mod) + 'px)');
+                    scope.curTopMap[target.data('target')] = curTop - mod;
+                    scope.touchEndEvent(e, target);
                 }
             })() : (function() {
                 // overflow bottom
                 var scrollBottomHeight = ($(e.target).parents('.ts-item-list').outerHeight() - scope.childHeight * 3);
 
                 if (Math.abs(curTop) > scrollBottomHeight) {
-                    target.animate({
-                        'top': -scrollBottomHeight + 'px'
-                    }, DURATION_TIME, function() {
-                        scope.curTopMap[target.data('target')] = -scrollBottomHeight;
-                        scope.touchEndEvent(e, target);
-                    });
+                    target.css('transform', 'translateY(' + -scrollBottomHeight + 'px)');
+                    scope.curTopMap[target.data('target')] = -scrollBottomHeight;
+                    scope.touchEndEvent(e, target);
                     return;
                 }
 
                 if (mod < -(CHILD_HEIGHT / 2)) {
-                    target.animate({
-                        'top': (curTop - CHILD_HEIGHT - mod) + 'px'
-                    }, DURATION_TIME, function() {
-                        scope.curTopMap[target.data('target')] = curTop - CHILD_HEIGHT - mod;
-                        scope.touchEndEvent(e, target);
-                    });
+                    target.css('transform', 'translateY(' + (curTop - CHILD_HEIGHT - mod) + 'px)');
+                    scope.curTopMap[target.data('target')] = curTop - CHILD_HEIGHT - mod;
+                    scope.touchEndEvent(e, target);
                 } else {
-                    target.animate({
-                        'top': (curTop - mod) + 'px'
-                    }, DURATION_TIME, function() {
-                        scope.curTopMap[target.data('target')] = curTop - mod;
-                        scope.touchEndEvent(e, target);
-                    });
+                    target.css('transform', 'translateY(' + (curTop - mod) + 'px)');
+                    scope.curTopMap[target.data('target')] = curTop - mod;
+                    scope.touchEndEvent(e, target);
                 }
             })();
         },
@@ -627,11 +609,8 @@
                 itemIndex = childItem.index(),
                 count = itemIndex - 2;
 
-            parent.animate({
-                'top': -(CHILD_HEIGHT * count) + 'px'
-            }, DURATION_TIME, function() {
-                scope.curTopMap[parent.data('target')] = -(CHILD_HEIGHT * count);
-            });
+            parent.css('transform', 'translateY(' + -(CHILD_HEIGHT * count) + 'px)');
+            scope.curTopMap[parent.data('target')] = -(CHILD_HEIGHT * count);
         },
 
         /*
