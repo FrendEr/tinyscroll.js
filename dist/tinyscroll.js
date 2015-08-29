@@ -105,12 +105,15 @@
                                     '<div class="ts-mask"></div>',
                                     '<div class="ts-front"></div>',
                                     '<div class="ts-col">',
+                                        '<em>年</em>',
                                         '<ul id="year" class="ts-item-list" data-target="year">' + this.generateList('year') + '</ul>',
                                     '</div>',
                                     '<div class="ts-col">',
+                                        '<em>月</em>',
                                         '<ul id="month" class="ts-item-list" data-target="month">' + this.generateList('month') + '</ul>',
                                     '</div>',
                                     '<div class="ts-col">',
+                                        '<em>日</em>',
                                         '<ul id="day" class="ts-item-list" data-target="day">' + this.generateList('day') + '</ul>',
                                     '</div>',
                                 '</div>',
@@ -345,7 +348,6 @@
                     if (this.stateTree.month > maxMonth) {
                         this.mBottomLocked = true;
                         this.setState({ month: maxMonth + 1 });
-                        console.log(1);
                     }
                 } else {
                     this.enableNextItems('month');
@@ -533,19 +535,16 @@
             (function() {
                 // overflow top
                 if (curTop > CHILD_HEIGHT * 2) {
-                    target.css('transform', 'translateY(' + CHILD_HEIGHT * 2 + 'px)');
-                    scope.curTopMap[target.data('target')] = CHILD_HEIGHT * 2;
+                    scope.translateYUpdate(target, CHILD_HEIGHT * 2);
                     scope.touchEndEvent(e, target);
                     return;
                 }
 
                 if (mod > (CHILD_HEIGHT / 2)) {
-                    target.css('transform', 'translateY(' + (curTop + CHILD_HEIGHT - mod) + 'px)');
-                    scope.curTopMap[target.data('target')] = curTop + CHILD_HEIGHT - mod;
+                    scope.translateYUpdate(target, (curTop + CHILD_HEIGHT - mod));
                     scope.touchEndEvent(e, target);
                 } else {
-                    target.css('transform', 'translateY(' + (curTop - mod) + 'px)');
-                    scope.curTopMap[target.data('target')] = curTop - mod;
+                    scope.translateYUpdate(target, (curTop - mod));
                     scope.touchEndEvent(e, target);
                 }
             })() : (function() {
@@ -553,19 +552,16 @@
                 var scrollBottomHeight = ($(e.target).parents('.ts-item-list').outerHeight() - scope.childHeight * 3);
 
                 if (Math.abs(curTop) > scrollBottomHeight) {
-                    target.css('transform', 'translateY(' + -scrollBottomHeight + 'px)');
-                    scope.curTopMap[target.data('target')] = -scrollBottomHeight;
+                    scope.translateYUpdate(target, -scrollBottomHeight);
                     scope.touchEndEvent(e, target);
                     return;
                 }
 
                 if (mod < -(CHILD_HEIGHT / 2)) {
-                    target.css('transform', 'translateY(' + (curTop - CHILD_HEIGHT - mod) + 'px)');
-                    scope.curTopMap[target.data('target')] = curTop - CHILD_HEIGHT - mod;
+                    scope.translateYUpdate(target, (curTop - CHILD_HEIGHT - mod));
                     scope.touchEndEvent(e, target);
                 } else {
-                    target.css('transform', 'translateY(' + (curTop - mod) + 'px)');
-                    scope.curTopMap[target.data('target')] = curTop - mod;
+                    scope.translateYUpdate(target, (curTop - mod));
                     scope.touchEndEvent(e, target);
                 }
             })();
@@ -578,6 +574,14 @@
             this.posTransIndex(e, this.curTopMap[target.data('target')]);
             this.moving = false;
             this.freezing = false;
+        },
+
+        /*
+         * transform update
+         */
+        translateYUpdate: function(element, translateY) {
+            element.css('transform', 'translateY(' + translateY + 'px)');
+            this.curTopMap[element.data('target')] = translateY;
         },
 
         /*
@@ -609,8 +613,7 @@
                 itemIndex = childItem.index(),
                 count = itemIndex - 2;
 
-            parent.css('transform', 'translateY(' + -(CHILD_HEIGHT * count) + 'px)');
-            scope.curTopMap[parent.data('target')] = -(CHILD_HEIGHT * count);
+            this.translateYUpdate(parent, -(CHILD_HEIGHT * count));
         },
 
         /*

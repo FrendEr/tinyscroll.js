@@ -1,6 +1,6 @@
 # Tinyscroll.js
 
-> A tiny scroll-datepicker plugin for mobile device.
+> A tiny date scroller plugin for mobile device.
 
 **gif demo, loading . . .**
 
@@ -11,11 +11,11 @@
 
 - **title** (optional)
 
-> datepicker title
+> date scroller title
 
 - **wrapper**
 
-> root element to wrap datepicker
+> root element to wrap date scroller
 
 - **range**
 
