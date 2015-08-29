@@ -24,38 +24,47 @@
     var DURATION_TIME = 150;    // ms
 
     function TinyScroll(options) {
-        this.options       = $.extend({}, options);                      // options
-        this.$wrapper      = $(this.options.wrapper);                    // root element
-        this.$target       = null;                                       // the target element
-        this.targetTop     = 0;                                          // drag target's top
-        this.targetHeight  = 0;                                          // drag target's height
-        this.childHeight   = CHILD_HEIGHT;                               // child element's height
-        this.freezing      = false;                                      // is freezing
-        this.moving        = false;                                      // is moving
-        this.curTopMap     = {};                                         // scroll item current top
-        this.oriTopMap     = {};                                         // scroll item original top
-        this.touchTime     = 0;                                          // touch start timestamp
-        this.touchY        = 0;                                          // touch start point postion
-        this.timeGap       = 0;                                          // time gap
-        this.moveState     = 'down';                                     // move state, up or down
-        this.mTopLocked    = false;                                      // month scroll to top locked
-        this.mBottomLocked = false;                                      // month scroll to bottom locked
-        this.dTopLocked    = false;                                      // day scroll to top locked
-        this.dBottomLocked = false;                                      // day scroll to bottom locked
-        this.stateTree     = {                                           // state tree
-            year:  this.options.year  || 10000,
-            month: this.options.month || 10000,
-            day:   this.options.day   || 10000
+        this.options        = $.extend({}, options);                      // options
+        this.$wrapper       = $(this.options.wrapper);                    // root element
+        this.$target        = null;                                       // the target element
+        this.targetTop      = 0;                                          // drag target's top
+        this.targetHeight   = 0;                                          // drag target's height
+        this.childHeight    = CHILD_HEIGHT;                               // child element's height
+        this.freezing       = false;                                      // is freezing
+        this.moving         = false;                                      // is moving
+        this.curTopMap      = {};                                         // scroll item current top
+        this.oriTopMap      = {};                                         // scroll item original top
+        this.touchTime      = 0;                                          // touch start timestamp
+        this.touchY         = 0;                                          // touch start point postion
+        this.timeGap        = 0;                                          // time gap
+        this.mTopLocked     = false;                                      // month scroll to top locked
+        this.mBottomLocked  = false;                                      // month scroll to bottom locked
+        this.dTopLocked     = false;                                      // day scroll to top locked
+        this.dBottomLocked  = false;                                      // day scroll to bottom locked
+        this.hhTopLocked    = false;                                      // hour scroll to top locked
+        this.hhBottomLocked = false;                                      // hour scroll to bottom locked
+        this.mmTopLocked    = false;                                      // minute scroll to top locked
+        this.mmBottomLocked = false;                                      // minute scroll to bottom locked
+        this.stateTree      = {                                           // state tree
+            year   : this.options.year   || 0,
+            month  : this.options.month  || 0,
+            day    : this.options.day    || 0,
+            hour   : this.options.hour   || 0,
+            minute : this.options.minute || 0
         };
         this.stateCache    = {                                           // state tree cache
-            year:  this.options.year  || 10000,
-            month: this.options.month || 10000,
-            day:   this.options.day   || 10000
+            year   : this.options.year   || 0,
+            month  : this.options.month  || 0,
+            day    : this.options.day    || 0,
+            hour   : this.options.hour   || 0,
+            minute : this.options.minute || 0
         };
         this.fnList        = {                                           // function list
-            year:  this.yearChanged,
-            month: this.monthChanged,
-            day:   this.dayChanged
+            year   : this.yearChanged,
+            month  : this.monthChanged,
+            day    : this.dayChanged,
+            hour   : this.hourChanged,
+            minute : this.minuteChanged
         };
 
         this.init();
@@ -65,7 +74,13 @@
         setTimeout(function(e) {
             var date = new Date(scope.options.initDate);
 
-            scope.setState({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() });
+            scope.setState({
+                year   : date.getFullYear(),
+                month  : date.getMonth() + 1,
+                day    : date.getDate(),
+                hour   : date.getHours(),
+                minute : date.getMinutes()
+            });
             $.extend(scope.stateCache, scope.stateTree);
         }, 300);
     }
@@ -101,10 +116,10 @@
             var htmlTpl = ['<div class="tiny-scroll-backdrop"></div>',
                             '<div class="tiny-scroll slideInUp animated">',
                                 (this.options.title ? '<div class="ts-header">' + this.options.title + '</div>' : ''),
-                                '<div class="ts-body">',
+                                '<div class="ts-body' + (this.options.time ? ' ts-datetime' : '') + '">',
                                     '<div class="ts-mask"></div>',
                                     '<div class="ts-front"></div>',
-                                    '<div class="ts-col">',
+                                    '<div class="ts-col ts-col-year">',
                                         (this.options.needLabel ? '<em>年</em>' : ''),
                                         '<ul id="year" class="ts-item-list" data-target="year">' + this.generateList('year') + '</ul>',
                                     '</div>',
@@ -116,6 +131,16 @@
                                         (this.options.needLabel ? '<em>日</em>' : ''),
                                         '<ul id="day" class="ts-item-list" data-target="day">' + this.generateList('day') + '</ul>',
                                     '</div>',
+                                    (this.options.time ? (function() {
+                                        return ['<div class="ts-col">',
+                                                    (scope.options.needLabel ? '<em>时</em>' : ''),
+                                                    '<ul id="hour" class="ts-item-list" data-target="hour">' + scope.generateList('hour') + '</ul>',
+                                                '</div>',
+                                                '<div class="ts-col">',
+                                                    (scope.options.needLabel ? '<em>分</em>' : ''),
+                                                    '<ul id="minute" class="ts-item-list" data-target="minute">' + scope.generateList('minute') + '</ul>',
+                                                '</div>'].join('');
+                                    })() : ''),
                                 '</div>',
                                 '<div class="ts-footer">',
                                     '<div class="btns-wrapper">',
@@ -189,12 +214,19 @@
         /*
          * format date
          */
-        formatDate: function(year, month, day) {
+        formatDate: function(year, month, day, hour, minute) {
             year = parseInt(year || this.stateTree.year);
             month = parseInt(month || this.stateTree.month);
             day = parseInt(day || this.stateTree.day);
+            hour = parseInt(hour || this.stateTree.hour);
+            minute = parseInt(minute || this.stateTree.minute);
 
-            return year + '-' + (month > 9 ? month : ('0' + month)) + '-' + (day > 9 ? day : ('0' + day));
+            return year + '-' +
+                    (month > 9 ? month : ('0' + month)) + '-' +
+                    (day > 9 ? day : ('0' + day)) + ' ' +
+                    (hour > 9 ? hour : ('0' + hour)) + ':' +
+                    (minute > 9 ? minute : ('0' + minute)) + ':' +
+                    '00';
         },
 
         /*
@@ -206,21 +238,38 @@
                 initDate = this.getInitDate(),
                 tmpTpl = '';
 
-            if (type == 'year') {
-                var maxYear = parseInt(maxDate.getFullYear()),
-                    minYear = parseInt(minDate.getFullYear());
+            switch (type) {
+                case 'year':
+                    var maxYear = parseInt(maxDate.getFullYear()),
+                        minYear = parseInt(minDate.getFullYear());
 
-                for (var i = 0; i <= maxYear - minYear; i++) {
-                    tmpTpl += '<li data-index="' + (minYear + i) + '">' + (minYear + i) + '</li>';
-                }
-            } else if (type == 'month') {
-                for (var j = 1; j <= 12; j++) {
-                    tmpTpl += '<li data-index="' + j + '">' + j + '</li>';
-                }
-            } else if (type == 'day') {
-                for (var k = 1; k < (this.getMonthDays(initDate.getFullYear(), initDate.getMonth()) + 1); k++) {
-                    tmpTpl += '<li data-index="' + k + '">' + k + '</li>';
-                }
+                    for (var i = 0; i <= maxYear - minYear; i++) {
+                        tmpTpl += '<li data-index="' + (minYear + i) + '">' + (minYear + i) + '</li>';
+                    }
+                    break;
+                case 'month':
+                    for (var j = 1; j <= 12; j++) {
+                        tmpTpl += '<li data-index="' + j + '">' + j + '</li>';
+                    }
+                    break;
+                case 'day':
+                    for (var k = 1; k < (this.getMonthDays(initDate.getFullYear(), initDate.getMonth()) + 1); k++) {
+                        tmpTpl += '<li data-index="' + k + '">' + k + '</li>';
+                    }
+                    break;
+                case 'hour':
+                    for (var h = 0; h <= 23; h++) {
+                        tmpTpl += '<li data-index="' + h + '">' + h + '</li>';
+                    }
+                    break;
+                case 'minute':
+                    for (var m = 0; m <= 30;) {
+                        tmpTpl += '<li data-index="' + m + '">' + m + '</li>';
+                        m += 30;
+                    }
+                    break;
+                default:
+                    break;
             }
 
             return tmpTpl;
@@ -231,7 +280,7 @@
          */
         setState: function(props) {
             for (var prop in props) {
-                if (this.stateTree[prop] && props[prop] !== this.stateTree[prop]) {
+                if (this.stateTree[prop] >= 0) {
                     this.stateTree[prop] = props[prop];
                     this.fnList[prop].call(this);
 
@@ -284,9 +333,11 @@
             console.log('year change to : ' + this.stateTree.year);
             // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
-            // month && day list fix
+            // month list fix
             this.monthListFix();
             this.dayListFix();
+            this.hourListFix();
+            this.minuteListFix();
 
             this.highlightSelected('year');
         },
@@ -298,9 +349,10 @@
             console.log('month changed to : ' + this.stateTree.month);
             // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
-            // month && day list fix
-            this.monthListFix();
+            // day list fix
             this.dayListFix();
+            this.hourListFix();
+            this.minuteListFix();
 
             this.highlightSelected('month');
         },
@@ -312,9 +364,33 @@
             console.log('day changed to : ' + this.stateTree.day);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
-            this.dayListFix();
+            this.hourListFix();
+            this.minuteListFix();
 
             this.highlightSelected('day');
+        },
+
+        /*
+         * hour change callback
+         */
+        hourChanged: function(e) {
+            console.log('hour changed to : ' + this.stateTree.hour);
+            // update day list position
+            this.indexTransPos(e, $(document.body).find('#hour'), this.stateTree.hour);
+            this.minuteListFix();
+
+            this.highlightSelected('hour');
+        },
+
+        /*
+         * minute change callback
+         */
+        minuteChanged: function(e) {
+            console.log('minute changed to : ' + this.stateTree.minute);
+            // update day list position
+            this.indexTransPos(e, $(document.body).find('#minute'), this.stateTree.minute);
+
+            this.highlightSelected('minute');
         },
 
         /*
@@ -329,12 +405,11 @@
             var minMonth = minDate.getMonth();
             if (this.stateTree.year == minDate.getFullYear()) {
                 console.log('reach min year');
-                this.disablePrevItems('month', minMonth);
 
-                if (this.stateTree.month <= minMonth) {
-                    this.mTopLocked = true;
-                    this.setState({ month: minMonth + 1 });
-                }
+                this.disablePrevItems('month', minMonth + 1);
+                this.mTopLocked = true;
+                this.mBottomLocked = false;
+                this.setState({ month: minMonth + 1 });
             } else {
                 this.enablePrevItems('month');
                 this.mTopLocked = false;
@@ -343,12 +418,11 @@
                 var maxMonth = maxDate.getMonth();
                 if (this.stateTree.year == maxDate.getFullYear()) {
                     console.log('reach max year');
-                    this.disableNextItems('month', maxMonth);
 
-                    if (this.stateTree.month > maxMonth) {
-                        this.mBottomLocked = true;
-                        this.setState({ month: maxMonth + 1 });
-                    }
+                    this.disableNextItems('month', maxMonth + 1);
+                    this.mBottomLocked = true;
+                    this.mTopLocked = false;
+                    this.setState({ month: maxMonth + 1 });
                 } else {
                     this.enableNextItems('month');
                     this.mBottomLocked = false;
@@ -368,28 +442,26 @@
 
             // minimum day
             var minDay = minDate.getDate();
-            if (this.stateTree.year == minDate.getFullYear() &&  this.stateTree.month == (minDate.getMonth() + 1)) {
+            if (this.mTopLocked &&  this.stateTree.month == (minDate.getMonth() + 1)) {
                 console.log('reach min month');
-                this.disablePrevItems('day', minDay - 1);
 
-                if (this.stateTree.day < minDay) {
-                    this.dTopLocked = true;
-                    this.setState({ day: minDay });
-                }
+                this.disablePrevItems('day', minDay);
+                this.dTopLocked = true;
+                this.dBottomLocked = false;
+                this.setState({ day: minDay });
             } else {
                 this.enablePrevItems('day');
                 this.dTopLocked = false;
 
                 // maximum day
                 var maxDay = maxDate.getDate();
-                if (this.stateTree.year == maxDate.getFullYear() && this.stateTree.month == (maxDate.getMonth() + 1)) {
+                if (this.mBottomLocked && this.stateTree.month == (maxDate.getMonth() + 1)) {
                     console.log('reach max month');
-                    this.disableNextItems('day', maxDay - 1);
 
-                    if (this.stateTree.day > maxDay) {
-                        this.dBottomLocked = true;
-                        this.setState({ day: maxDay });
-                    }
+                    this.disableNextItems('day', maxDay);
+                    this.dBottomLocked = true;
+                    this.dTopLocked = false;
+                    this.setState({ day: maxDay });
                 } else {
                     this.enableNextItems('day');
                     this.dBottomLocked = false;
@@ -411,13 +483,87 @@
         },
 
         /*
+         * hour list fix
+         */
+        hourListFix: function() {
+            var hourTarget = this.$wrapper.find('#hour'),
+                maxDate = this.getMaxDate(),
+                minDate = this.getMinDate();
+
+            // minimum hour
+            var minHour = minDate.getHours();
+            if (this.dTopLocked && this.stateTree.day == minDate.getDate()) {
+                console.log('reach min day');
+
+                this.disablePrevItems('hour', minHour);
+                this.hhTopLocked = true;
+                this.hhBottomLocked = false;
+                this.setState({ hour: minHour });
+            } else {
+                this.enablePrevItems('hour');
+                this.hhTopLocked = false;
+
+                // maximum hour
+                var maxHour = maxDate.getHours();
+                if (this.dBottomLocked && this.stateTree.day == maxDate.getDate()) {
+                    console.log('reach max day');
+
+                    this.disableNextItems('hour', maxHour);
+                    this.hhBottomLocked = true;
+                    this.hhTopLocked = false;
+                    this.setState({ hour: maxHour });
+                } else {
+                    this.enableNextItems('hour');
+                    this.hhBottomLocked = false;
+                }
+            }
+        },
+
+        /*
+         * minute list fix
+         */
+         minuteListFix: function() {
+             var minuteTarget = this.$wrapper.find('#minute'),
+                 maxDate = this.getMaxDate(),
+                 minDate = this.getMinDate();
+
+             // minimum minute
+             var minMinute = minDate.getMinutes();
+             if (this.hhTopLocked && this.stateTree.hour == minDate.getHours()) {
+                 console.log('reach min hour');
+
+                 this.disablePrevItems('minute', minMinute);
+                 this.mmTopLocked = true;
+                 this.mmBottomLocked = false;
+                 this.setState({ minute: minMinute });
+             } else {
+                 this.enablePrevItems('minute');
+                 this.mmTopLocked = false;
+
+                 // maximum minute
+                 var maxMinute = maxDate.getMinutes();
+                 if (this.hhBottomLocked && this.stateTree.hour == maxDate.getHours()) {
+                     console.log('reach max hour');
+
+                     this.disableNextItems('minute', maxMinute);
+                     this.mmBottomLocked = true;
+                     this.mmTopLocked = false;
+                     this.setState({ minute: maxMinute });
+                 } else {
+                     this.enableNextItems('minute');
+                     this.mmBottomLocked = false;
+                 }
+             }
+        },
+
+        /*
          * disable month or day list items which overflow
          */
         disablePrevItems: function(type, index) {
             var target = this.$wrapper.find('#' + type);
 
             target.children('.disable').removeClass('disable');
-            target.children().eq(index).prevAll().addClass('disable');
+            target.find('[data-index="' + index + '"]').prevAll().addClass('disable');
         },
 
         /*
@@ -427,7 +573,7 @@
             var target = this.$wrapper.find('#' + type);
 
             target.children('.disable').removeClass('disable');
-            target.children().eq(index).nextAll().addClass('disable');
+            target.find('[data-index="' + index + '"]').nextAll().addClass('disable');
         },
 
         /*
@@ -470,7 +616,6 @@
             });
 
             this.$wrapper.on('click', '.ts-cancel-btn', function() {
-                // $.extend(scope.stateTree, scope.stateCache);
                 scope.setState(scope.stateCache);
                 scope.hide();
             });
@@ -531,7 +676,7 @@
                 curTop = this.curTopMap[target.data('target')],
                 mod = curTop % CHILD_HEIGHT;
 
-            this.moveState = mod > 0 ?
+            mod > 0 ?
             (function() {
                 // overflow top
                 if (curTop > CHILD_HEIGHT * 2) {
@@ -590,16 +735,67 @@
         posTransIndex: function(e, pos) {
             var target = $(e.target).parents('.ts-item-list'),
                 targetId = target.attr('id'),
-                dataIndex = target.find('li').eq(2 - (pos / CHILD_HEIGHT)).data('index');
+                dataIndex = target.find('li').eq(2 - (pos / CHILD_HEIGHT)).data('index'),
+                minDate = this.getMinDate(),
+                maxDate = this.getMaxDate();
 
             switch (targetId) {
-                case 'year'  :
-                    this.setState({ year: dataIndex }); break;
-                case 'month' :
-                    this.setState({ month: dataIndex }); break;
-                case 'day'   :
-                    this.setState({ day: dataIndex }); break;
-                default      :
+                case 'year'   :
+                    this.setState({ year: dataIndex });
+                    break;
+                case 'month'  :
+                    if (this.mTopLocked === true && (dataIndex < minDate.getMonth() + 1)) {
+                        this.setState({ month: minDate.getMonth() + 1 });
+                    } else if (this.mBottomLocked === true && (dataIndex > maxDate.getMonth() + 1)) {
+                        this.setState({ month: maxDate.getMonth() + 1 });
+                    } else if (this.mTopLocked === true && (dataIndex > minDate.getMonth() + 1)) {
+                        this.setState({ month: dataIndex });
+                    } else if (this.mBottomLocked === true && (dataIndex < maxDate.getMonth() + 1)) {
+                        this.setState({ month: dataIndex });
+                    } else {
+                        this.setState({ month: dataIndex });
+                    }
+                    break;
+                case 'day'    :
+                    if (this.dTopLocked === true && (dataIndex < minDate.getDate())) {
+                        this.setState({ day: minDate.getDate() });
+                    } else if (this.dBottomLocked === true && (dataIndex > maxDate.getDate())) {
+                        this.setState({ day: maxDate.getDate() });
+                    } else if (this.dTopLocked === true && (dataIndex > minDate.getDate())) {
+                        this.setState({ day: dataIndex });
+                    } else if (this.dBottomLocked === true && (dataIndex < maxDate.getDate())) {
+                        this.setState({ day: dataIndex });
+                    } else {
+                        this.setState({ day: dataIndex });
+                    }
+                    break;
+                case 'hour'   :
+                    if (this.hhTopLocked === true && (dataIndex < minDate.getHours())) {
+                        this.setState({ hour: minDate.getHours() });
+                    } else if (this.hhBottomLocked === true && (dataIndex > maxDate.getHours())) {
+                        this.setState({ hour: maxDate.getHours() });
+                    } else if (this.hhTopLocked === true && (dataIndex > minDate.getHours())) {
+                        this.setState({ hour: dataIndex });
+                    } else if (this.hhBottomLocked === true && (dataIndex < maxDate.getHours())) {
+                        this.setState({ hour: dataIndex });
+                    } else {
+                        this.setState({ hour: dataIndex });
+                    }
+                    break;
+                case 'minute' :
+                    if (this.mmTopLocked === true && (dataIndex < minDate.getMinutes())) {
+                        this.setState({ minute: minDate.getMinutes() });
+                    } else if (this.mmBottomLocked === true && (dataIndex > maxDate.getMinutes())) {
+                        this.setState({ minute: maxDate.getMinutes() });
+                    } else if (this.mmTopLocked === true && (dataIndex > minDate.getMinutes())) {
+                        this.setState({ minute: dataIndex });
+                    } else if (this.mmBottomLocked === true && (dataIndex < maxDate.getMinutes())) {
+                        this.setState({ minute: dataIndex });
+                    } else {
+                        this.setState({ minute: dataIndex });
+                    }
+                    break;
+                default       :
                     break;
             }
         },

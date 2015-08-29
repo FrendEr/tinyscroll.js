@@ -22,11 +22,17 @@
 
 - **range**
 
-> date range, ['2010', '2015'] etc.
+> date range, ['2010-03-09 12:30:00', '2015-01-01 23:00:00'] etc.
+
+- **time** (optional)
+
+> show time scroller, default false
+
+![demo](./demo.png)
 
 - **initDate** (optional)
 
-> initialize date, '2012-08-01' etc.
+> initialize date, '2011-07-20 18:30:00' etc.
 
 - **year** (optional)
 
@@ -58,10 +64,16 @@
 ```js
 
 var ts = new TinyScroll({
-    title: 'tinyscroll.js demo',
     wrapper: '#container',
-    range: ['2000-08-10', '2016-05-06'],
-    initDate: '2012-07-20'
+    needLabel: true,
+    range: ['2010-03-09 12:30:00', '2015-01-01 23:00:00'],
+    time: true,
+    initDate: '2011-07-20 18:30:00',
+    cancelValue: '取消',
+    okValue: '确定',
+    okCallback: function(date) {
+        alert(date);
+    }
 });
 
 ```

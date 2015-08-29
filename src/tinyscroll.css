@@ -44,6 +44,10 @@ ul {
     height: 170px;
 }
 
+.tiny-scroll .ts-body .ts-date {
+    overflow: hidden;
+}
+
 .tiny-scroll .ts-body .ts-col {
     position: relative;
     float: left;
@@ -56,16 +60,24 @@ ul {
     height: 100%;
 }
 
+.tiny-scroll .ts-datetime .ts-col {
+    width: 20%;
+}
+
 .tiny-scroll .ts-body .ts-col em {
     position: absolute;
     font-style: normal;
     font-size: 14px;
     color: #05b47a;
     top: 50%;
-    right: 15px;
+    right: 10px;
     line-height: 14px;
     margin-top: -7px;
     font-weight: bold;
+}
+
+.tiny-scroll .ts-body .ts-col-year em {
+    right: -5px;
 }
 
 .tiny-scroll .ts-body .ts-col .ts-item-list {

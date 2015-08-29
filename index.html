@@ -41,7 +41,7 @@
     <body>
         <div id="container"></div>
         <button type="button" id="button">选择出行日期</button>
-        <p class="date-tips">已选择的日期：<span id="selectDate">yyyy-MM-DD</span></p>
+        <p class="date-tips">已选择的日期：<span id="selectDate">yyyy-MM-DD hh:mm:ss</span></p>
         <script src="./node_modules/jquery/dist/jquery.min.js" charset="utf-8"></script>
         <script src="./src/tinyscroll.js" charset="utf-8"></script>
         <script type="text/javascript">
@@ -51,8 +51,9 @@
                 ts = new TinyScroll({
                     wrapper: '#container',
                     needLabel: true,
-                    range: ['2005-03-09', '2015-01-01'],
-                    initDate: '2012-07-20',
+                    range: ['2010-03-09 12:30:00', '2015-01-01 23:00:00'],
+                    time: true,
+                    initDate: '2011-07-20 18:30:00',
                     cancelValue: '取消',
                     okValue: '确定',
                     okCallback: function(date) {
