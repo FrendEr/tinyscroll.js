@@ -6,16 +6,19 @@
 
 ![demo](./demo.gif)
 
-
 ## Props
+
+- **wrapper**
+
+> root element to wrap date scroller
 
 - **title** (optional)
 
 > date scroller title
 
-- **wrapper**
+- **needLabel** (optional)
 
-> root element to wrap date scroller
+> show the section label: year, month and day
 
 - **range**
 
@@ -27,15 +30,15 @@
 
 - **year** (optional)
 
-> initialize `stateTree`'s `year`
+> initialize `stateTree.year`
 
 - **month** (optional)
 
-> initialize `stateTree`'s `month`
+> initialize `stateTree.month`
 
 - **day** (optional)
 
-> initialize `stateTree`'s `day`
+> initialize `stateTree.day`
 
 - **cancelValue** (optional)
 
