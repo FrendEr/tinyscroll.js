@@ -66,6 +66,7 @@
             hour   : this.hourChanged,
             minute : this.minuteChanged
         };
+        // bug: 当我选择了比最小年、最小月大的月时，再选择最小的年，月份应该保留，现在会设置成最小的月
 
         this.init();
 
@@ -398,7 +399,9 @@
                 this.disablePrevItems('month', minMonth + 1);
                 this.mTopLocked = true;
                 this.mBottomLocked = false;
-                this.setState({ month: minMonth + 1 });
+                if (this.stateTree.month < minMonth + 1) {
+                    this.setState({ month: minMonth + 1 });
+                }
             } else {
                 this.enablePrevItems('month');
                 this.mTopLocked = false;
@@ -411,7 +414,9 @@
                     this.disableNextItems('month', maxMonth + 1);
                     this.mBottomLocked = true;
                     this.mTopLocked = false;
-                    this.setState({ month: maxMonth + 1 });
+                    if (this.stateTree.month > maxMonth + 1) {
+                        this.setState({ month: maxMonth + 1 });
+                    }
                 } else {
                     this.enableNextItems('month');
                     this.mBottomLocked = false;
@@ -437,7 +442,9 @@
                 this.disablePrevItems('day', minDay);
                 this.dTopLocked = true;
                 this.dBottomLocked = false;
-                this.setState({ day: minDay });
+                if (this.stateTree.day < minDay) {
+                    this.setState({ day: minDay });
+                }
             } else {
                 this.enablePrevItems('day');
                 this.dTopLocked = false;
@@ -450,7 +457,9 @@
                     this.disableNextItems('day', maxDay);
                     this.dBottomLocked = true;
                     this.dTopLocked = false;
-                    this.setState({ day: maxDay });
+                    if (this.stateTree.day > maxDay) {
+                        this.setState({ day: maxDay });
+                    }
                 } else {
                     this.enableNextItems('day');
                     this.dBottomLocked = false;
@@ -487,7 +496,9 @@
                 this.disablePrevItems('hour', minHour);
                 this.hhTopLocked = true;
                 this.hhBottomLocked = false;
-                this.setState({ hour: minHour });
+                if (this.stateTree.hour < minHour) {
+                    this.setState({ hour: minHour });
+                }
             } else {
                 this.enablePrevItems('hour');
                 this.hhTopLocked = false;
@@ -500,7 +511,9 @@
                     this.disableNextItems('hour', maxHour);
                     this.hhBottomLocked = true;
                     this.hhTopLocked = false;
-                    this.setState({ hour: maxHour });
+                    if (this.stateTree.hour > maxHour) {
+                        this.setState({ hour: maxHour });
+                    }
                 } else {
                     this.enableNextItems('hour');
                     this.hhBottomLocked = false;
@@ -524,7 +537,9 @@
                  this.disablePrevItems('minute', minMinute);
                  this.mmTopLocked = true;
                  this.mmBottomLocked = false;
-                 this.setState({ minute: minMinute });
+                 if (this.stateTree.minute < minMinute) {
+                     this.setState({ minute: minMinute });
+                 }
              } else {
                  this.enablePrevItems('minute');
                  this.mmTopLocked = false;
@@ -537,7 +552,9 @@
                      this.disableNextItems('minute', maxMinute);
                      this.mmBottomLocked = true;
                      this.mmTopLocked = false;
-                     this.setState({ minute: maxMinute });
+                     if (this.stateTree.minute > maxMinute) {
+                         this.setState({ minute: maxMinute });
+                     }
                  } else {
                      this.enableNextItems('minute');
                      this.mmBottomLocked = false;
