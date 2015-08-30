@@ -1,6 +1,6 @@
 # Tinyscroll.js
 
-> A tiny date scroller plugin for mobile device.
+> A tiny datetime scroller plugin for mobile device.
 
 **gif demo, loading . . .**
 
@@ -10,15 +10,15 @@
 
 - **wrapper**
 
-> root element to wrap date scroller
+> root element to wrap datetime scroller
 
 - **title** (optional)
 
-> date scroller title
+> datetime scroller title
 
 - **needLabel** (optional)
 
-> show the section label: year, month and day
+> show the section label: year, month, day, hour and minute
 
 - **range**
 
@@ -45,6 +45,14 @@
 - **day** (optional)
 
 > initialize `stateTree.day`
+
+- **hour** (optional)
+
+> initialize `stateTree.hour`
+
+- **minute** (optional)
+
+> initialize `stateTree.minute`
 
 - **cancelValue** (optional)
 
@@ -84,6 +92,7 @@ var ts = new TinyScroll({
 
 git clone https://github.com/FrendEr/tinyscroll.js.git
 cd tinyscroll.js
+npm install
 open index.html
 
 ```
