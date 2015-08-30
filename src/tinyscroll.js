@@ -52,7 +52,13 @@
             hour   : this.options.hour   || 0,
             minute : this.options.minute || 0
         };
-        this.stateCache     = this.stateTree;                             // state tree cache
+        this.stateCache     = {                                           // state tree cache
+            year   : this.options.year   || 0,
+            month  : this.options.month  || 0,
+            day    : this.options.day    || 0,
+            hour   : this.options.hour   || 0,
+            minute : this.options.minute || 0
+        };
         this.fnList         = {                                           // function list
             year   : this.yearChanged,
             month  : this.monthChanged,
