@@ -66,7 +66,6 @@
             hour   : this.hourChanged,
             minute : this.minuteChanged
         };
-        // bug: 当我选择了比最小年、最小月大的月时，再选择最小的年，月份应该保留，现在会设置成最小的月
 
         this.init();
 
@@ -95,7 +94,7 @@
          */
         init: function() {
             if (new Date(this.options.initDate) < new Date(this.options.range[0]) || new Date(this.options.initDate) > new Date(this.options.range[1])) {
-                throw 'Error: the initDate is ERROR!';
+                throw 'Error: The `initDate` is error! ' + 'Range is: [' + this.options.range[0] + ', ' + this.options.range[1] + ']';
             }
 
             this.render();
@@ -119,25 +118,29 @@
                                 (this.options.title ? '<div class="ts-header">' + this.options.title + '</div>' : ''),
                                 '<div class="ts-body' + (this.options.time ? ' ts-datetime' : '') + '">',
                                     '<div class="ts-mask"></div>',
-                                    '<div class="ts-front"></div>',
                                     '<div class="ts-col ts-col-year">',
+                                        '<div class="ts-front"></div>',
                                         (this.options.needLabel ? '<em>年</em>' : ''),
                                         '<ul id="year" class="ts-item-list" data-target="year">' + this.generateList('year') + '</ul>',
                                     '</div>',
                                     '<div class="ts-col">',
+                                        '<div class="ts-front"></div>',
                                         (this.options.needLabel ? '<em>月</em>' : ''),
                                         '<ul id="month" class="ts-item-list" data-target="month">' + this.generateList('month') + '</ul>',
                                     '</div>',
                                     '<div class="ts-col">',
+                                        '<div class="ts-front"></div>',
                                         (this.options.needLabel ? '<em>日</em>' : ''),
                                         '<ul id="day" class="ts-item-list" data-target="day">' + this.generateList('day') + '</ul>',
                                     '</div>',
                                     (this.options.time ? (function() {
                                         return ['<div class="ts-col">',
+                                                    '<div class="ts-front"></div>',
                                                     (scope.options.needLabel ? '<em>时</em>' : ''),
                                                     '<ul id="hour" class="ts-item-list" data-target="hour">' + scope.generateList('hour') + '</ul>',
                                                 '</div>',
                                                 '<div class="ts-col">',
+                                                    '<div class="ts-front"></div>',
                                                     (scope.options.needLabel ? '<em>分</em>' : ''),
                                                     '<ul id="minute" class="ts-item-list" data-target="minute">' + scope.generateList('minute') + '</ul>',
                                                 '</div>'].join('');
@@ -244,18 +247,18 @@
                     var maxYear = parseInt(maxDate.getFullYear()),
                         minYear = parseInt(minDate.getFullYear());
 
-                    for (var i = 0; i <= maxYear - minYear; i++) {
-                        tmpTpl += '<li data-index="' + (minYear + i) + '">' + (minYear + i) + '</li>';
+                    for (var y = 0; y <= maxYear - minYear; y++) {
+                        tmpTpl += '<li data-index="' + (minYear + y) + '">' + (minYear + y) + '</li>';
                     }
                     break;
                 case 'month':
-                    for (var j = 1; j <= 12; j++) {
-                        tmpTpl += '<li data-index="' + j + '">' + j + '</li>';
+                    for (var M = 1; M <= 12; M++) {
+                        tmpTpl += '<li data-index="' + M + '">' + M + '</li>';
                     }
                     break;
                 case 'day':
-                    for (var k = 1; k < (this.getMonthDays(initDate.getFullYear(), initDate.getMonth()) + 1); k++) {
-                        tmpTpl += '<li data-index="' + k + '">' + k + '</li>';
+                    for (var d = 1; d < (this.getMonthDays(initDate.getFullYear(), initDate.getMonth()) + 1); d++) {
+                        tmpTpl += '<li data-index="' + d + '">' + d + '</li>';
                     }
                     break;
                 case 'hour':
@@ -318,7 +321,6 @@
          * year change callback
          */
         yearChanged: function(e) {
-            console.log('year change to : ' + this.stateTree.year);
             // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
             // year change, update month, day, hour and minute
@@ -334,7 +336,6 @@
          * month change callback
          */
         monthChanged: function(e) {
-            console.log('month changed to : ' + this.stateTree.month);
             // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
             // month change, update day, hour and minute
@@ -349,7 +350,6 @@
          * day change callback
          */
         dayChanged: function(e) {
-            console.log('day changed to : ' + this.stateTree.day);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
             // day change, update hour and minute
@@ -363,7 +363,6 @@
          * hour change callback
          */
         hourChanged: function(e) {
-            console.log('hour changed to : ' + this.stateTree.hour);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#hour'), this.stateTree.hour);
             // hour change, update minute
@@ -376,7 +375,6 @@
          * minute change callback
          */
         minuteChanged: function(e) {
-            console.log('minute changed to : ' + this.stateTree.minute);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#minute'), this.stateTree.minute);
 
@@ -394,8 +392,6 @@
             // minimum month
             var minMonth = minDate.getMonth();
             if (this.stateTree.year == minDate.getFullYear()) {
-                console.log('reach min year');
-
                 this.disablePrevItems('month', minMonth + 1);
                 this.mTopLocked = true;
                 this.mBottomLocked = false;
@@ -409,8 +405,6 @@
                 // maximum month
                 var maxMonth = maxDate.getMonth();
                 if (this.stateTree.year == maxDate.getFullYear()) {
-                    console.log('reach max year');
-
                     this.disableNextItems('month', maxMonth + 1);
                     this.mBottomLocked = true;
                     this.mTopLocked = false;
@@ -437,8 +431,6 @@
             // minimum day
             var minDay = minDate.getDate();
             if (this.mTopLocked &&  this.stateTree.month == (minDate.getMonth() + 1)) {
-                console.log('reach min month');
-
                 this.disablePrevItems('day', minDay);
                 this.dTopLocked = true;
                 this.dBottomLocked = false;
@@ -452,8 +444,6 @@
                 // maximum day
                 var maxDay = maxDate.getDate();
                 if (this.mBottomLocked && this.stateTree.month == (maxDate.getMonth() + 1)) {
-                    console.log('reach max month');
-
                     this.disableNextItems('day', maxDay);
                     this.dBottomLocked = true;
                     this.dTopLocked = false;
@@ -491,8 +481,6 @@
             // minimum hour
             var minHour = minDate.getHours();
             if (this.dTopLocked && this.stateTree.day == minDate.getDate()) {
-                console.log('reach min day');
-
                 this.disablePrevItems('hour', minHour);
                 this.hhTopLocked = true;
                 this.hhBottomLocked = false;
@@ -506,8 +494,6 @@
                 // maximum hour
                 var maxHour = maxDate.getHours();
                 if (this.dBottomLocked && this.stateTree.day == maxDate.getDate()) {
-                    console.log('reach max day');
-
                     this.disableNextItems('hour', maxHour);
                     this.hhBottomLocked = true;
                     this.hhTopLocked = false;
@@ -532,8 +518,6 @@
              // minimum minute
              var minMinute = minDate.getMinutes();
              if (this.hhTopLocked && this.stateTree.hour == minDate.getHours()) {
-                 console.log('reach min hour');
-
                  this.disablePrevItems('minute', minMinute);
                  this.mmTopLocked = true;
                  this.mmBottomLocked = false;
@@ -547,8 +531,6 @@
                  // maximum minute
                  var maxMinute = maxDate.getMinutes();
                  if (this.hhBottomLocked && this.stateTree.hour == maxDate.getHours()) {
-                     console.log('reach max hour');
-
                      this.disableNextItems('minute', maxMinute);
                      this.mmBottomLocked = true;
                      this.mmTopLocked = false;

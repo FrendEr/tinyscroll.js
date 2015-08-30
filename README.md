@@ -1,6 +1,6 @@
 # Tinyscroll.js
 
-> A tiny datetime scroller plugin for mobile device.
+> A tiny datetime scroller plugin for mobile device, dependencies on jquery and animate.css
 
 **gif demo, loading . . .**
 
