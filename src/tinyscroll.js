@@ -52,14 +52,8 @@
             hour   : this.options.hour   || 0,
             minute : this.options.minute || 0
         };
-        this.stateCache    = {                                           // state tree cache
-            year   : this.options.year   || 0,
-            month  : this.options.month  || 0,
-            day    : this.options.day    || 0,
-            hour   : this.options.hour   || 0,
-            minute : this.options.minute || 0
-        };
-        this.fnList        = {                                           // function list
+        this.stateCache     = this.stateTree;                             // state tree cache
+        this.fnList         = {                                           // function list
             year   : this.yearChanged,
             month  : this.monthChanged,
             day    : this.dayChanged,
@@ -283,19 +277,6 @@
                 if (this.stateTree[prop] >= 0) {
                     this.stateTree[prop] = props[prop];
                     this.fnList[prop].call(this);
-
-                    if (this.mTopLocked && props[prop] < this.stateTree[prop]) {
-                        console.info('Month top has locked! Do not move!');
-                    }
-                    if (this.dTopLocked && props[prop] < this.stateTree[prop]) {
-                        console.info('Day top has locked! Do not move!');
-                    }
-                    if (this.mBottomLocked && props[prop] > this.stateTree[prop]) {
-                        console.info('Month bottom has locked! Do not move!');
-                    }
-                    if (this.dBottomLocked && props[prop] > this.stateTree[prop]) {
-                        console.info('Day bottom has locked! Do not move!');
-                    }
                 }
             }
         },
@@ -333,7 +314,7 @@
             console.log('year change to : ' + this.stateTree.year);
             // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
-            // month list fix
+            // year change, update month, day, hour and minute
             this.monthListFix();
             this.dayListFix();
             this.hourListFix();
@@ -349,7 +330,7 @@
             console.log('month changed to : ' + this.stateTree.month);
             // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
-            // day list fix
+            // month change, update day, hour and minute
             this.dayListFix();
             this.hourListFix();
             this.minuteListFix();
@@ -364,6 +345,7 @@
             console.log('day changed to : ' + this.stateTree.day);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
+            // day change, update hour and minute
             this.hourListFix();
             this.minuteListFix();
 
@@ -377,6 +359,7 @@
             console.log('hour changed to : ' + this.stateTree.hour);
             // update day list position
             this.indexTransPos(e, $(document.body).find('#hour'), this.stateTree.hour);
+            // hour change, update minute
             this.minuteListFix();
 
             this.highlightSelected('hour');
