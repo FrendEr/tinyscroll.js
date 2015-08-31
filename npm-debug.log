@@ -1,0 +1,31 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'version', 'patch' ]
+2 info using npm@2.12.1
+3 info using node@v0.12.7
+4 verbose node symlink /usr/local/bin/node
+5 info preversion tinyscroll.js@0.2.7
+6 info git [ 'status', '--porcelain' ]
+7 verbose stack Error: Error: Git working directory not clean.
+7 verbose stack M dist/tinyscroll.js
+7 verbose stack M dist/tinyscroll.min.js
+7 verbose stack M src/tinyscroll.js
+7 verbose stack     at /usr/local/lib/node_modules/npm/lib/version.js:71:23
+7 verbose stack     at /usr/local/lib/node_modules/npm/lib/version.js:151:34
+7 verbose stack     at ChildProcess.exithandler (child_process.js:742:7)
+7 verbose stack     at ChildProcess.emit (events.js:110:17)
+7 verbose stack     at maybeClose (child_process.js:1015:16)
+7 verbose stack     at Socket.<anonymous> (child_process.js:1183:11)
+7 verbose stack     at Socket.emit (events.js:107:17)
+7 verbose stack     at Pipe.close (net.js:485:12)
+8 verbose cwd /Users/frend/Documents/Frend/Github-Repo/FrendEr/tinyscroll.js
+9 error Darwin 14.3.0
+10 error argv "node" "/usr/local/bin/npm" "version" "patch"
+11 error node v0.12.7
+12 error npm  v2.12.1
+13 error Error: Git working directory not clean.
+13 error M dist/tinyscroll.js
+13 error M dist/tinyscroll.min.js
+13 error M src/tinyscroll.js
+14 error If you need help, you may report this error at:
+14 error     <https://github.com/npm/npm/issues>
+15 verbose exit [ 1, true ]

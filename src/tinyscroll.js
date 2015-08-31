@@ -141,7 +141,7 @@
 
             this.$wrapper.append(htmlTpl);
 
-            this.eventBinding();
+            this.attachEvents();
 
             // init initDate
             setTimeout(function(e) {
@@ -580,24 +580,25 @@
         /*
          * init touch events
          */
-        eventBinding: function() {
+        attachEvents: function() {
             var scope = this;
 
             this.$wrapper.on('click', '.tiny-scroll-backdrop', function(e) {
                 scope.hide();
             });
 
-            this.$wrapper.on('touchstart touchmove touchend', '.ts-item-list', function(e) {
+            this.$wrapper.on('touchstart touchmove touchend touchcancel', '.ts-item-list', function(e) {
                 this.$target = $(e.target).hasClass('.ts-item-list') ? $(e.target) : $(e.target).parents('.ts-item-list');
 
                 switch (e.originalEvent.type) {
-                    case 'touchstart' :
+                    case 'touchstart'  :
                         scope.touchStart.call(scope, e, this.$target); break;
-                    case 'touchmove'  :
+                    case 'touchmove'   :
                         scope.touchMove.call(scope, e, this.$target);  break;
-                    case 'touchend'   :
+                    case 'touchend'    :
+                    case 'touchcancel' :
                         scope.touchEnd.call(scope, e, this.$target);   break;
-                    default           :
+                    default            :
                         break;
                 }
             });
@@ -620,6 +621,7 @@
         touchStart: function(e) {
             if (this.freezing) return;
 
+            e.preventDefault();
             e.stopPropagation();
 
             var target = $(e.target).parents('.ts-item-list'), offsetTop;
@@ -640,9 +642,6 @@
          */
         touchMove: function(e, target) {
             if (!this.moving) return false;
-
-            e.preventDefault();
-            e.stopPropagation();
 
             var offsetTop = this.getPointPos(e.originalEvent.touches[0]);
 
@@ -697,6 +696,9 @@
                     scope.touchEndEvent(e, target);
                 }
             })();
+
+            e.preventDefault();
+            e.stopPropagation();
         },
 
         /*
