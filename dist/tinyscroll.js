@@ -68,21 +68,6 @@
         };
 
         this.init();
-
-        // init initDate
-        var scope = this;
-        setTimeout(function(e) {
-            var date = new Date(scope.options.initDate);
-
-            scope.setState({
-                year   : date.getFullYear(),
-                month  : date.getMonth() + 1,
-                day    : date.getDate(),
-                hour   : date.getHours(),
-                minute : date.getMinutes()
-            });
-            $.extend(scope.stateCache, scope.stateTree);
-        }, 300);
     }
 
     TinyScroll.prototype = {
@@ -157,6 +142,20 @@
             this.$wrapper.append(htmlTpl);
 
             this.eventBinding();
+
+            // init initDate
+            setTimeout(function(e) {
+                var date = new Date(scope.options.initDate);
+
+                scope.setState({
+                    year   : date.getFullYear(),
+                    month  : date.getMonth() + 1,
+                    day    : date.getDate(),
+                    hour   : date.getHours(),
+                    minute : date.getMinutes()
+                });
+                $.extend(scope.stateCache, scope.stateTree);
+            }, 300);
         },
 
         /*
