@@ -1,11 +1,11 @@
 /*
- * ===============================================
- *
- * @name    tinyscroll.js
- * @author  Frend
- * @github  https://github.com/Frend/tinyscroll.js
- *
- * ===============================================
+ + ------------------------------------------------ +
+ |                                                  |
+ | @name    tinyscroll.js                           |
+ | @author  Frend                                   |
+ | @github  https://github.com/Frend/tinyscroll.js  |
+ |                                                  |
+ + ------------------------------------------------ +
  */
 
 ;(function(root, factory) {
@@ -21,14 +21,11 @@
     'use strict';
 
     var CHILD_HEIGHT  = 30;     // px
-    var DURATION_TIME = 150;    // ms
 
     function TinyScroll(options) {
         this.options        = $.extend({}, options);                      // options
         this.$wrapper       = $(this.options.wrapper);                    // root element
         this.$target        = null;                                       // the target element
-        this.targetTop      = 0;                                          // drag target's top
-        this.targetHeight   = 0;                                          // drag target's height
         this.childHeight    = CHILD_HEIGHT;                               // child element's height
         this.freezing       = false;                                      // is freezing
         this.moving         = false;                                      // is moving
