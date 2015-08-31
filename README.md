@@ -2,6 +2,10 @@
 
 > A tiny datetime scroller plugin for mobile device, dependencies on jquery and animate.css
 
+<a href="https://www.npmjs.com/package/tinyscroll.js">
+    <img src="https://img.shields.io/npm/dm/tinyscroll.js.svg?style=flat-square" />
+</a>
+
 **gif demo, loading . . .**
 
 ![demo](./demo.gif)
