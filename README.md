@@ -1,10 +1,11 @@
-# Tinyscroll.js
+# Tinyscroll.js  
 
-> A tiny datetime scroller plugin for mobile device, dependencies on jquery and animate.css
+> A tiny datetime scroller plugin for mobile device, dependencies on jquery and animate.css. **If it's help for you, please give it a star!** :star:
 
 <a href="https://www.npmjs.com/package/tinyscroll.js">
     <img src="https://img.shields.io/npm/dm/tinyscroll.js.svg?style=flat-square" />
 </a>
+
 
 **gif demo, loading . . .**
 
