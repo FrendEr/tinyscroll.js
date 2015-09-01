@@ -27,7 +27,6 @@
         this.maxDate        = null;                                       // max date
         this.$wrapper       = $(this.options.wrapper);                    // root element
         this.$target        = null;                                       // the target element
-        this.childHeight    = CHILD_HEIGHT;                               // child element's height
         this.freezing       = false;                                      // is freezing
         this.moving         = false;                                      // is moving
         this.curTopMap      = {};                                         // scroll item current top
@@ -161,14 +160,14 @@
         /*
          * show the tinyscroll
          */
-        show: function() {
+        showScroller: function() {
             this.render();
         },
 
         /*
          * hide the tinyscroll
          */
-        hide: function() {
+        hideScroller: function() {
             var scope = this;
 
             this.setState(scope.stateCache);
@@ -589,7 +588,7 @@
             var scope = this;
 
             this.$wrapper.on('click', '.tiny-scroll-backdrop', function(e) {
-                scope.hide();
+                scope.hideScroller();
             });
 
             this.$wrapper.on('touchstart touchmove touchend touchcancel', '.ts-item-list', function(e) {
@@ -610,12 +609,12 @@
 
             this.$wrapper.on('click', '.ts-cancel-btn', function() {
                 scope.setState(scope.stateCache);
-                scope.hide();
+                scope.hideScroller();
             });
 
             this.$wrapper.on('click', '.ts-ok-btn', function() {
                 $.extend(scope.stateCache, scope.stateTree);
-                scope.hide();
+                scope.hideScroller();
                 scope.options.okCallback && typeof scope.options.okCallback === 'function' && scope.options.okCallback(scope.formatDate());
             });
         },
@@ -685,7 +684,7 @@
                 }
             })() : (function() {
                 // overflow bottom
-                var scrollBottomHeight = ($(e.target).parents('.ts-item-list').outerHeight() - scope.childHeight * 3);
+                var scrollBottomHeight = ($(e.target).parents('.ts-item-list').outerHeight() - CHILD_HEIGHT * 3);
 
                 if (Math.abs(curTop) > scrollBottomHeight) {
                     scope.translateYUpdate(target, -scrollBottomHeight);

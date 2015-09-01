@@ -11,6 +11,32 @@
 
 ![demo](./demo.gif)
 
+## Usage
+
+```js
+
+// init `ts`
+var ts;
+if (!ts) {
+    ts = new TinyScroll({
+        wrapper: '#container',
+        needLabel: true,
+        range: ['2010/03/09 12:30:00', '2015/01/01 23:00:00'],
+        time: true,
+        initDate: '2011/07/20 18:30:00',
+        cancelValue: '取消',
+        okValue: '确定',
+        okCallback: function(date) {
+            alert(date);
+        }
+    });
+}
+
+// if the `ts` is defined
+ts.showScroller();
+
+```
+
 ## Props
 
 - **wrapper**
@@ -75,25 +101,11 @@
 
 > click ok button callback function
 
+## API
 
-## Usage
+- **showScroller**
 
-```js
-
-var ts = new TinyScroll({
-    wrapper: '#container',
-    needLabel: true,
-    range: ['2010/03/09 12:30:00', '2015/01/01 23:00:00'],
-    time: true,
-    initDate: '2011/07/20 18:30:00',
-    cancelValue: '取消',
-    okValue: '确定',
-    okCallback: function(date) {
-        alert(date);
-    }
-});
-
-```
+> when the `ts` is defined, should not init it again, just invoke the method to show it
 
 ## Run demo
 
