@@ -32,15 +32,9 @@
 
     function TinyScroll(options) {
         this.options        = UTILS.extend({}, options);                  // options
-        this.initDate       = typeof this.options.initDate === 'string'   // init date
-                                ? new Date(this.options.initDate)
-                                : this.options.initDate;
-        this.minDate        = typeof this.options.range[0] === 'string'   // min date
-                                ? new Date(this.options.range[0])
-                                : this.options.range[0];
-        this.maxDate        = typeof this.options.range[1] === 'string'   // max date
-                                ? new Date(this.options.range[1])
-                                : this.options.range[1];
+        this.initDate       = null;                                       // init date
+        this.minDate        = null;                                       // min date
+        this.maxDate        = null;                                       // max date
         this.$wrapper       = $(this.options.wrapper);                    // root element
         this.$target        = null;                                       // the target element
         this.childHeight    = CHILD_HEIGHT;                               // child element's height
@@ -95,6 +89,8 @@
             if (this.initDate < this.minDate || this.initDate > this.maxDate) {
                 throw 'Error: The `initDate` is error! ' + 'Range is: [' + this.minDate + ', ' + this.maxDate + ']';
             }
+
+            this.dateInit();
 
             this.render();
         },
@@ -188,6 +184,38 @@
             this.setState(scope.stateCache);
             this.$wrapper.find('.tiny-scroll').removeClass('slideInUp').addClass('slideOutDown');
             this.$wrapper.find('.tiny-scroll-backdrop').hide();
+        },
+
+        /*
+         * date initialize
+         */
+        dateInit: function() {
+            var initDate = this.options.initDate,
+                minDate = this.options.range[0],
+                maxDate = this.options.range[1];
+
+            this.initDate = this.dateTranslate(initDate);
+            this.minDate = this.dateTranslate(minDate);
+            this.maxDate = this.dateTranslate(maxDate);
+        },
+
+        /*
+         * date translate, minute should be 0 or 30
+         */
+        dateTranslate: function(date) {
+            var dateObj = typeof date === 'string' ? new Date(date) : date,
+                mod = dateObj.getMinutes() % 30;
+
+            mod > 30 ?
+            (function() {
+                dateObj.setHours(dateObj.getHours() + 1);
+                dateObj.setMinutes(0);
+            })() :
+            (function() {
+                dateObj.setMinutes(30);
+            })();
+
+            return dateObj;
         },
 
         /*
