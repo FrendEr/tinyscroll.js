@@ -20,18 +20,8 @@
 
     var CHILD_HEIGHT  = 30;     // px
 
-    var UTILS = {
-        extend: function(destination, source) {
-            for (var prop in source) {
-                destination[prop] = source[prop];
-            }
-
-            return destination;
-        }
-    };
-
     function TinyScroll(options) {
-        this.options        = UTILS.extend({}, options);                  // options
+        this.options        = $.extend({}, options);                      // options
         this.initDate       = null;                                       // init date
         this.minDate        = null;                                       // min date
         this.maxDate        = null;                                       // max date
@@ -164,7 +154,7 @@
                     hour   : date.getHours(),
                     minute : date.getMinutes()
                 });
-                UTILS.extend(scope.stateCache, scope.stateTree);
+                $.extend(scope.stateCache, scope.stateTree);
             }, 300);
         },
 
@@ -624,7 +614,7 @@
             });
 
             this.$wrapper.on('click', '.ts-ok-btn', function() {
-                UTILS.extend(scope.stateCache, scope.stateTree);
+                $.extend(scope.stateCache, scope.stateTree);
                 scope.hide();
                 scope.options.okCallback && typeof scope.options.okCallback === 'function' && scope.options.okCallback(scope.formatDate());
             });

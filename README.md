@@ -27,7 +27,9 @@
 
 - **range**
 
-> date range, `['2010/03/09 12:30:00', '2015/01/01 23:00:00']` or `[new Date('2010/03/09 12:30:00'), new Date('2015/01/01 23:00:00')]`. Attention: If the date is `String`, it's format must be `yyyy/MM/DD hh:mm:ss`.
+> date range: `['2010/03/09 12:30:00', '2015/01/01 23:00:00']` or `[new Date('2010/03/09 12:30:00'), new Date('2015/01/01 23:00:00')]`.
+
+> Attention: If the date is `String`, it's format must be `yyyy/MM/DD hh:mm:ss`.
 
 - **time** (optional)
 
@@ -37,7 +39,9 @@
 
 - **initDate** (optional)
 
-> initialize date, `'2011/07/20 18:30:00'` or `new Date('2011/07/20 18:30:00')`. Attention: If the date is `String`, it's format must be `yyyy/MM/DD hh:mm:ss`.
+> initialize date: `'2011/07/20 18:30:00'` or `new Date('2011/07/20 18:30:00')`.
+
+> Attention: If the date is `String`, it's format must be `yyyy/MM/DD hh:mm:ss`.
 
 - **year** (optional)
 
