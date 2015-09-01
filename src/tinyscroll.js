@@ -1,11 +1,9 @@
 /*
- + ------------------------------------------------ +
- |                                                  |
- | @name    tinyscroll.js                           |
- | @author  Frend                                   |
- | @github  https://github.com/Frend/tinyscroll.js  |
- |                                                  |
- + ------------------------------------------------ +
+ + -------------------------------------------------- +
+ | @name    tinyscroll.js                             |
+ | @author  Frend                                     |
+ | @github  https://github.com/FrendEr/tinyscroll.js  |
+ + -------------------------------------------------- +
  */
 
 ;(function(root, factory) {
@@ -22,8 +20,27 @@
 
     var CHILD_HEIGHT  = 30;     // px
 
+    var UTILS = {
+        extend: function(destination, source) {
+            for (var prop in source) {
+                destination[prop] = source[prop];
+            }
+
+            return destination;
+        }
+    };
+
     function TinyScroll(options) {
-        this.options        = $.extend({}, options);                      // options
+        this.options        = UTILS.extend({}, options);                  // options
+        this.initDate       = typeof this.options.initDate === 'string'   // init date
+                                ? new Date(this.options.initDate)
+                                : this.options.initDate;
+        this.minDate        = typeof this.options.range[0] === 'string'   // min date
+                                ? new Date(this.options.range[0])
+                                : this.options.range[0];
+        this.maxDate        = typeof this.options.range[1] === 'string'   // max date
+                                ? new Date(this.options.range[1])
+                                : this.options.range[1];
         this.$wrapper       = $(this.options.wrapper);                    // root element
         this.$target        = null;                                       // the target element
         this.childHeight    = CHILD_HEIGHT;                               // child element's height
@@ -75,8 +92,8 @@
          * initialize app
          */
         init: function() {
-            if (new Date(this.options.initDate) < new Date(this.options.range[0]) || new Date(this.options.initDate) > new Date(this.options.range[1])) {
-                throw 'Error: The `initDate` is error! ' + 'Range is: [' + this.options.range[0] + ', ' + this.options.range[1] + ']';
+            if (this.initDate < this.minDate || this.initDate > this.maxDate) {
+                throw 'Error: The `initDate` is error! ' + 'Range is: [' + this.minDate + ', ' + this.maxDate + ']';
             }
 
             this.render();
@@ -142,7 +159,7 @@
 
             // init initDate
             setTimeout(function(e) {
-                var date = new Date(scope.options.initDate);
+                var date = scope.initDate;
 
                 scope.setState({
                     year   : date.getFullYear(),
@@ -151,7 +168,7 @@
                     hour   : date.getHours(),
                     minute : date.getMinutes()
                 });
-                $.extend(scope.stateCache, scope.stateTree);
+                UTILS.extend(scope.stateCache, scope.stateTree);
             }, 300);
         },
 
@@ -171,33 +188,6 @@
             this.setState(scope.stateCache);
             this.$wrapper.find('.tiny-scroll').removeClass('slideInUp').addClass('slideOutDown');
             this.$wrapper.find('.tiny-scroll-backdrop').hide();
-        },
-
-        /*
-         * get min date
-         */
-        getMinDate: function() {
-            var scope = this;
-
-            return new Date(scope.options.range[0]);
-        },
-
-        /*
-         * get max date
-         */
-        getMaxDate: function() {
-            var scope = this;
-
-            return new Date(scope.options.range[1]);
-        },
-
-        /*
-         * get init date
-         */
-        getInitDate: function() {
-            var scope = this;
-
-            return new Date(scope.options.initDate);
         },
 
         /*
@@ -233,9 +223,9 @@
          * generate list
          */
         generateList: function(type) {
-            var minDate = this.getMinDate(),
-                maxDate = this.getMaxDate(),
-                initDate = this.getInitDate(),
+            var minDate = this.minDate,
+                maxDate = this.maxDate,
+                initDate = this.initDate,
                 tmpTpl = '';
 
             switch (type) {
@@ -382,8 +372,8 @@
          */
         monthListFix: function() {
             var monthTarget = this.$wrapper.find('#month'),
-                maxDate = this.getMaxDate(),
-                minDate = this.getMinDate();
+                maxDate = this.maxDate,
+                minDate = this.minDate;
 
             // minimum month
             var minMonth = minDate.getMonth();
@@ -421,8 +411,8 @@
             var dayTarget = this.$wrapper.find('#day'),
                 originalLength = dayTarget.children().length,
                 newLength = this.getMonthDays(this.stateTree.year, this.stateTree.month - 1),
-                maxDate = this.getMaxDate(),
-                minDate = this.getMinDate();
+                maxDate = this.maxDate,
+                minDate = this.minDate;
 
             // minimum day
             var minDay = minDate.getDate();
@@ -471,8 +461,8 @@
          */
         hourListFix: function() {
             var hourTarget = this.$wrapper.find('#hour'),
-                maxDate = this.getMaxDate(),
-                minDate = this.getMinDate();
+                maxDate = this.maxDate,
+                minDate = this.minDate;
 
             // minimum hour
             var minHour = minDate.getHours();
@@ -508,8 +498,8 @@
          */
          minuteListFix: function() {
              var minuteTarget = this.$wrapper.find('#minute'),
-                 maxDate = this.getMaxDate(),
-                 minDate = this.getMinDate();
+                 maxDate = this.maxDate,
+                 minDate = this.minDate;
 
              // minimum minute
              var minMinute = minDate.getMinutes();
@@ -606,7 +596,7 @@
             });
 
             this.$wrapper.on('click', '.ts-ok-btn', function() {
-                $.extend(scope.stateCache, scope.stateTree);
+                UTILS.extend(scope.stateCache, scope.stateTree);
                 scope.hide();
                 scope.options.okCallback && typeof scope.options.okCallback === 'function' && scope.options.okCallback(scope.formatDate());
             });
@@ -722,8 +712,8 @@
             var target = $(e.target).parents('.ts-item-list'),
                 targetId = target.attr('id'),
                 dataIndex = target.find('li').eq(2 - (pos / CHILD_HEIGHT)).data('index'),
-                minDate = this.getMinDate(),
-                maxDate = this.getMaxDate();
+                minDate = this.minDate,
+                maxDate = this.maxDate;
 
             switch (targetId) {
                 case 'year'   :

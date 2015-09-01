@@ -51,9 +51,9 @@
                 ts = new TinyScroll({
                     wrapper: '#container',
                     needLabel: true,
-                    range: ['2010/03/09 12:30:00', '2015/01/01 23:00:00'],
+                    range: [new Date('2010/03/09 12:30:00'), new Date('2015/01/01 23:00:00')],
                     time: true,
-                    initDate: '2011/07/20 18:30:00',
+                    initDate: new Date('2011/07/20 18:30:00'),
                     cancelValue: '取消',
                     okValue: '确定',
                     okCallback: function(date) {
