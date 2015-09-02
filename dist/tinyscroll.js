@@ -700,9 +700,6 @@
                     scope.touchEndEvent(e, target);
                 }
             })();
-
-            e.preventDefault();
-            e.stopPropagation();
         },
 
         /*
@@ -741,10 +738,6 @@
                         this.setState({ month: minDate.getMonth() + 1 });
                     } else if (this.mBottomLocked === true && (dataIndex > maxDate.getMonth() + 1)) {
                         this.setState({ month: maxDate.getMonth() + 1 });
-                    } else if (this.mTopLocked === true && (dataIndex > minDate.getMonth() + 1)) {
-                        this.setState({ month: dataIndex });
-                    } else if (this.mBottomLocked === true && (dataIndex < maxDate.getMonth() + 1)) {
-                        this.setState({ month: dataIndex });
                     } else {
                         this.setState({ month: dataIndex });
                     }
@@ -754,10 +747,6 @@
                         this.setState({ day: minDate.getDate() });
                     } else if (this.dBottomLocked === true && (dataIndex > maxDate.getDate())) {
                         this.setState({ day: maxDate.getDate() });
-                    } else if (this.dTopLocked === true && (dataIndex > minDate.getDate())) {
-                        this.setState({ day: dataIndex });
-                    } else if (this.dBottomLocked === true && (dataIndex < maxDate.getDate())) {
-                        this.setState({ day: dataIndex });
                     } else {
                         this.setState({ day: dataIndex });
                     }
@@ -767,10 +756,6 @@
                         this.setState({ hour: minDate.getHours() });
                     } else if (this.hhBottomLocked === true && (dataIndex > maxDate.getHours())) {
                         this.setState({ hour: maxDate.getHours() });
-                    } else if (this.hhTopLocked === true && (dataIndex > minDate.getHours())) {
-                        this.setState({ hour: dataIndex });
-                    } else if (this.hhBottomLocked === true && (dataIndex < maxDate.getHours())) {
-                        this.setState({ hour: dataIndex });
                     } else {
                         this.setState({ hour: dataIndex });
                     }
@@ -780,10 +765,6 @@
                         this.setState({ minute: minDate.getMinutes() });
                     } else if (this.mmBottomLocked === true && (dataIndex > maxDate.getMinutes())) {
                         this.setState({ minute: maxDate.getMinutes() });
-                    } else if (this.mmTopLocked === true && (dataIndex > minDate.getMinutes())) {
-                        this.setState({ minute: dataIndex });
-                    } else if (this.mmBottomLocked === true && (dataIndex < maxDate.getMinutes())) {
-                        this.setState({ minute: dataIndex });
                     } else {
                         this.setState({ minute: dataIndex });
                     }
