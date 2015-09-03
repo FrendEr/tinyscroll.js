@@ -18,6 +18,16 @@
 
     'use strict';
 
+    // device detect
+    if (!('ontouchstart' in window)) {
+        alert('Error tips: You can\'t use the tinyscroll.js because your device does not support touch events.');
+    }
+
+    // dependencies detect
+    if ($ !== jQuery) {
+        alert('Error tips: Tinyscroll.js is dependen on jQuery! Make use jQuery has been loaded.');
+    }
+
     var CHILD_HEIGHT  = 30;     // px
 
     function TinyScroll(options) {
