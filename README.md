@@ -111,7 +111,7 @@ if (!ts) {
 
 - **online**
 
-[http://frender.github.io/tinyscroll.js]( http://frender.github.io/tinyscroll.js.)
+[http://frender.github.io/tinyscroll.js](http://frender.github.io/tinyscroll.js)
 
 - **local**
 
