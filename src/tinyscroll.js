@@ -24,7 +24,7 @@
     }
 
     // dependencies detect
-    if ($ !== jQuery) {
+    if (!$ || $ !== jQuery) {
         alert('Error tips: Tinyscroll.js is dependen on jQuery! Make use jQuery has been loaded.');
     }
 

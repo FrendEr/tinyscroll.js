@@ -15,9 +15,9 @@
 
 ```js
 
-// init `ts`
 var ts;
 if (!ts) {
+    // init `ts`
     ts = new TinyScroll({
         wrapper: '#container',
         needLabel: true,
@@ -30,10 +30,10 @@ if (!ts) {
             alert(date);
         }
     });
+} else {
+    // if the `ts` is defined
+    ts.showScroller();
 }
-
-// if the `ts` is defined
-ts.showScroller();
 
 ```
 
@@ -107,7 +107,13 @@ ts.showScroller();
 
 > when the `ts` is defined, should not init it again, just invoke the method to show it
 
-## Run demo
+## Demo
+
+- **online**
+
+[http://frender.github.io/tinyscroll.js]( http://frender.github.io/tinyscroll.js.)
+
+- **local**
 
 ```js
 
