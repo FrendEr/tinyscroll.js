@@ -79,8 +79,8 @@ ul {
 
 .tiny-scroll .ts-body .ts-col .ts-item-list {
     width: 100%;
-    transform: translateY(0);
-    transition-duration: 100ms;
+    transition: -webkit-transform 100ms ease-out;
+    transform: translate3d(0px, 0px, 0px);
 }
 
 .tiny-scroll .ts-body .ts-col .ts-item-list .selected {
