@@ -24,7 +24,7 @@
     }
 
     // dependencies detect
-    if ($ && $ !== jQuery) {
+    if (!$ || $ !== jQuery) {
         alert('Error tips: Tinyscroll.js is dependen on jQuery! Make use jQuery has been loaded.');
     }
 
@@ -659,7 +659,7 @@
             var offsetTop = this.getPointPos(e.originalEvent.touches[0]);
 
             this.curTopMap[target.data('target')] = offsetTop - this.touchY;
-            target.css('transform', 'translateY(' + this.curTopMap[target.data('target')] + 'px)');
+            target.css('transform', 'translate3d(0px, ' + this.curTopMap[target.data('target')] + 'px, 0px)');
         },
 
         /*
@@ -724,7 +724,7 @@
          * transform update
          */
         translateYUpdate: function(element, translateY) {
-            element.css('transform', 'translateY(' + translateY + 'px)');
+            element.css('transform', 'translate3d(0px, ' + translateY + 'px, 0px)');
             this.curTopMap[element.data('target')] = translateY;
         },
 
