@@ -238,9 +238,9 @@
             minute = parseInt(minute || this.stateTree.minute);
 
             return year + '-' +
-                    (month > 9 ? month : ('0' + month)) + '-' +
-                    (day > 9 ? day : ('0' + day)) + ' ' +
-                    (hour > 9 ? hour : ('0' + hour)) + ':' +
+                    (month  > 9 ? month  : ('0' + month))  + '-' +
+                    (day    > 9 ? day    : ('0' + day))    + ' ' +
+                    (hour   > 9 ? hour   : ('0' + hour))   + ':' +
                     (minute > 9 ? minute : ('0' + minute)) + ':' +
                     '00';
         },
@@ -335,11 +335,8 @@
         yearChanged: function(e) {
             // update year list position
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
-            // year change, update month, day, hour and minute
+            // year change, update month
             this.monthListFix();
-            this.dayListFix();
-            this.hourListFix();
-            this.minuteListFix();
 
             this.highlightSelected('year');
         },
@@ -350,10 +347,8 @@
         monthChanged: function(e) {
             // update month list position
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
-            // month change, update day, hour and minute
+            // month change, update day
             this.dayListFix();
-            this.hourListFix();
-            this.minuteListFix();
 
             this.highlightSelected('month');
         },
@@ -364,9 +359,8 @@
         dayChanged: function(e) {
             // update day list position
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
-            // day change, update hour and minute
+            // day change, update hour
             this.hourListFix();
-            this.minuteListFix();
 
             this.highlightSelected('day');
         },
@@ -428,6 +422,9 @@
                     this.mBottomLocked = false;
                 }
             }
+
+            // trigger dayListFix
+            this.dayListFix();
         },
 
         /*
@@ -480,6 +477,9 @@
                     this.setState({ day: dayTarget.children().last().data('index') });
                 }
             }
+
+            // trigger hourListFix
+            this.hourListFix();
         },
 
         /*
@@ -517,6 +517,9 @@
                     this.hhBottomLocked = false;
                 }
             }
+
+            // trigger minuteListFix
+            this.minuteListFix();
         },
 
         /*
