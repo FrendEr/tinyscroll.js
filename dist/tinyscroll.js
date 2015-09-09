@@ -337,8 +337,6 @@
             this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
             // year change, update month
             this.monthListFix();
-
-            this.highlightSelected('year');
         },
 
         /*
@@ -349,8 +347,6 @@
             this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
             // month change, update day
             this.dayListFix();
-
-            this.highlightSelected('month');
         },
 
         /*
@@ -361,8 +357,6 @@
             this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
             // day change, update hour
             this.hourListFix();
-
-            this.highlightSelected('day');
         },
 
         /*
@@ -373,8 +367,6 @@
             this.indexTransPos(e, $(document.body).find('#hour'), this.stateTree.hour);
             // hour change, update minute
             this.minuteListFix();
-
-            this.highlightSelected('hour');
         },
 
         /*
@@ -383,8 +375,6 @@
         minuteChanged: function(e) {
             // update day list position
             this.indexTransPos(e, $(document.body).find('#minute'), this.stateTree.minute);
-
-            this.highlightSelected('minute');
         },
 
         /*
@@ -727,8 +717,11 @@
          * transform update
          */
         translateYUpdate: function(element, translateY) {
+            var target = element.data('target');
+
             element.css('transform', 'translate3d(0px, ' + translateY + 'px, 0px)');
-            this.curTopMap[element.data('target')] = translateY;
+            this.curTopMap[target] = translateY;
+            this.highlightSelected(target);
         },
 
         /*
