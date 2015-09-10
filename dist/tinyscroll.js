@@ -334,7 +334,7 @@
          */
         yearChanged: function(e) {
             // update year list position
-            this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
+            this.index2Pos(e, $(document.body).find('#year'), this.stateTree.year);
             // year change, update month
             this.monthListFix();
         },
@@ -344,7 +344,7 @@
          */
         monthChanged: function(e) {
             // update month list position
-            this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
+            this.index2Pos(e, $(document.body).find('#month'), this.stateTree.month);
             // month change, update day
             this.dayListFix();
         },
@@ -354,7 +354,7 @@
          */
         dayChanged: function(e) {
             // update day list position
-            this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
+            this.index2Pos(e, $(document.body).find('#day'), this.stateTree.day);
             // day change, update hour
             this.hourListFix();
         },
@@ -364,7 +364,7 @@
          */
         hourChanged: function(e) {
             // update day list position
-            this.indexTransPos(e, $(document.body).find('#hour'), this.stateTree.hour);
+            this.index2Pos(e, $(document.body).find('#hour'), this.stateTree.hour);
             // hour change, update minute
             this.minuteListFix();
         },
@@ -374,7 +374,7 @@
          */
         minuteChanged: function(e) {
             // update day list position
-            this.indexTransPos(e, $(document.body).find('#minute'), this.stateTree.minute);
+            this.index2Pos(e, $(document.body).find('#minute'), this.stateTree.minute);
         },
 
         /*
@@ -637,7 +637,7 @@
                 this.touchTime = e.timeStamp;
                 this.curTopMap[target.data('target')] = this.curTopMap[target.data('target')] ? this.curTopMap[target.data('target')] : 0;
 
-                offsetTop = this.getPointPos(e.originalEvent.touches[0]);
+                offsetTop = this.getTouchPos(e.originalEvent.touches[0]);
                 this.touchY = offsetTop - this.curTopMap[target.data('target')];
                 this.moving = true;
             }
@@ -649,7 +649,7 @@
         touchMove: function(e, target) {
             if (!this.moving) return false;
 
-            var offsetTop = this.getPointPos(e.originalEvent.touches[0]);
+            var offsetTop = this.getTouchPos(e.originalEvent.touches[0]);
 
             this.curTopMap[target.data('target')] = offsetTop - this.touchY;
             target.css('transform', 'translate3d(0px, ' + this.curTopMap[target.data('target')] + 'px, 0px)');
@@ -708,7 +708,7 @@
          * touchend event
          */
         touchEndEvent: function(e, target) {
-            this.posTransIndex(e, this.curTopMap[target.data('target')]);
+            this.pos2Index(e, this.curTopMap[target.data('target')]);
             this.moving = false;
             this.freezing = false;
         },
@@ -727,7 +727,7 @@
         /*
          * translate position to selected item with index
          */
-        posTransIndex: function(e, pos) {
+        pos2Index: function(e, pos) {
             var target = $(e.target).parents('.ts-item-list'),
                 targetId = target.attr('id'),
                 dataIndex = target.find('li').eq(2 - (pos / CHILD_HEIGHT)).data('index'),
@@ -782,7 +782,7 @@
         /*
          * translate item with index to position
          */
-        indexTransPos: function(e, parent, index) {
+        index2Pos: function(e, parent, index) {
             var scope = this,
                 childItem = parent.find('[data-index="' + parseInt(index) + '"]'),
                 itemIndex = childItem.index(),
@@ -794,7 +794,7 @@
         /*
          * get the touch point's postion
          */
-        getPointPos: function(e) {
+        getTouchPos: function(e) {
             return Math.max(document.body.scrollTop, document.documentElement.scrollTop) + e.clientY;
         }
     };
