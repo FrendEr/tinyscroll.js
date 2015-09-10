@@ -1,6 +1,6 @@
 {
   "name": "tinyscroll.js",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A tiny datetime scroller plugin for mobile device.",
   "main": "tinyscroll.js",
   "scripts": {
