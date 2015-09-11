@@ -81,6 +81,8 @@ ul {
     width: 100%;
     transition: -webkit-transform 100ms ease-out;
     transform: translate3d(0px, 0px, 0px);
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
 }
 
 .tiny-scroll .ts-body .ts-col .ts-item-list .selected {
