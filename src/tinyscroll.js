@@ -238,9 +238,9 @@
             minute = parseInt(minute || this.stateTree.minute);
 
             return year + '-' +
-                    (month > 9 ? month : ('0' + month)) + '-' +
-                    (day > 9 ? day : ('0' + day)) + ' ' +
-                    (hour > 9 ? hour : ('0' + hour)) + ':' +
+                    (month  > 9 ? month  : ('0' + month))  + '-' +
+                    (day    > 9 ? day    : ('0' + day))    + ' ' +
+                    (hour   > 9 ? hour   : ('0' + hour))   + ':' +
                     (minute > 9 ? minute : ('0' + minute)) + ':' +
                     '00';
         },
@@ -334,14 +334,9 @@
          */
         yearChanged: function(e) {
             // update year list position
-            this.indexTransPos(e, $(document.body).find('#year'), this.stateTree.year);
-            // year change, update month, day, hour and minute
+            this.index2Pos(e, $(document.body).find('#year'), this.stateTree.year);
+            // year change, update month
             this.monthListFix();
-            this.dayListFix();
-            this.hourListFix();
-            this.minuteListFix();
-
-            this.highlightSelected('year');
         },
 
         /*
@@ -349,13 +344,9 @@
          */
         monthChanged: function(e) {
             // update month list position
-            this.indexTransPos(e, $(document.body).find('#month'), this.stateTree.month);
-            // month change, update day, hour and minute
+            this.index2Pos(e, $(document.body).find('#month'), this.stateTree.month);
+            // month change, update day
             this.dayListFix();
-            this.hourListFix();
-            this.minuteListFix();
-
-            this.highlightSelected('month');
         },
 
         /*
@@ -363,12 +354,9 @@
          */
         dayChanged: function(e) {
             // update day list position
-            this.indexTransPos(e, $(document.body).find('#day'), this.stateTree.day);
-            // day change, update hour and minute
+            this.index2Pos(e, $(document.body).find('#day'), this.stateTree.day);
+            // day change, update hour
             this.hourListFix();
-            this.minuteListFix();
-
-            this.highlightSelected('day');
         },
 
         /*
@@ -376,11 +364,9 @@
          */
         hourChanged: function(e) {
             // update day list position
-            this.indexTransPos(e, $(document.body).find('#hour'), this.stateTree.hour);
+            this.index2Pos(e, $(document.body).find('#hour'), this.stateTree.hour);
             // hour change, update minute
             this.minuteListFix();
-
-            this.highlightSelected('hour');
         },
 
         /*
@@ -388,9 +374,7 @@
          */
         minuteChanged: function(e) {
             // update day list position
-            this.indexTransPos(e, $(document.body).find('#minute'), this.stateTree.minute);
-
-            this.highlightSelected('minute');
+            this.index2Pos(e, $(document.body).find('#minute'), this.stateTree.minute);
         },
 
         /*
@@ -428,6 +412,9 @@
                     this.mBottomLocked = false;
                 }
             }
+
+            // trigger dayListFix
+            this.dayListFix();
         },
 
         /*
@@ -480,6 +467,9 @@
                     this.setState({ day: dayTarget.children().last().data('index') });
                 }
             }
+
+            // trigger hourListFix
+            this.hourListFix();
         },
 
         /*
@@ -517,6 +507,9 @@
                     this.hhBottomLocked = false;
                 }
             }
+
+            // trigger minuteListFix
+            this.minuteListFix();
         },
 
         /*
@@ -644,7 +637,7 @@
                 this.touchTime = e.timeStamp;
                 this.curTopMap[target.data('target')] = this.curTopMap[target.data('target')] ? this.curTopMap[target.data('target')] : 0;
 
-                offsetTop = this.getPointPos(e.originalEvent.touches[0]);
+                offsetTop = this.getTouchPos(e.originalEvent.touches[0]);
                 this.touchY = offsetTop - this.curTopMap[target.data('target')];
                 this.moving = true;
             }
@@ -656,7 +649,7 @@
         touchMove: function(e, target) {
             if (!this.moving) return false;
 
-            var offsetTop = this.getPointPos(e.originalEvent.touches[0]);
+            var offsetTop = this.getTouchPos(e.originalEvent.touches[0]);
 
             this.curTopMap[target.data('target')] = offsetTop - this.touchY;
             target.css('transform', 'translate3d(0px, ' + this.curTopMap[target.data('target')] + 'px, 0px)');
@@ -715,7 +708,7 @@
          * touchend event
          */
         touchEndEvent: function(e, target) {
-            this.posTransIndex(e, this.curTopMap[target.data('target')]);
+            this.pos2Index(e, this.curTopMap[target.data('target')]);
             this.moving = false;
             this.freezing = false;
         },
@@ -724,14 +717,17 @@
          * transform update
          */
         translateYUpdate: function(element, translateY) {
+            var target = element.data('target');
+
             element.css('transform', 'translate3d(0px, ' + translateY + 'px, 0px)');
-            this.curTopMap[element.data('target')] = translateY;
+            this.curTopMap[target] = translateY;
+            this.highlightSelected(target);
         },
 
         /*
          * translate position to selected item with index
          */
-        posTransIndex: function(e, pos) {
+        pos2Index: function(e, pos) {
             var target = $(e.target).parents('.ts-item-list'),
                 targetId = target.attr('id'),
                 dataIndex = target.find('li').eq(2 - (pos / CHILD_HEIGHT)).data('index'),
@@ -786,7 +782,7 @@
         /*
          * translate item with index to position
          */
-        indexTransPos: function(e, parent, index) {
+        index2Pos: function(e, parent, index) {
             var scope = this,
                 childItem = parent.find('[data-index="' + parseInt(index) + '"]'),
                 itemIndex = childItem.index(),
@@ -798,7 +794,7 @@
         /*
          * get the touch point's postion
          */
-        getPointPos: function(e) {
+        getTouchPos: function(e) {
             return Math.max(document.body.scrollTop, document.documentElement.scrollTop) + e.clientY;
         }
     };
