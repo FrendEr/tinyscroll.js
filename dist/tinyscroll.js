@@ -628,7 +628,6 @@
             if (this.freezing) return;
 
             e.preventDefault();
-            e.stopPropagation();
 
             var target = $(e.target).parents('.ts-item-list'), offsetTop;
 
@@ -637,7 +636,7 @@
                 this.touchTime = e.timeStamp;
                 this.curTopMap[target.data('target')] = this.curTopMap[target.data('target')] ? this.curTopMap[target.data('target')] : 0;
 
-                offsetTop = this.getTouchPos(e.originalEvent.touches[0]);
+                offsetTop = e.originalEvent.touches[0].pageY;
                 this.touchY = offsetTop - this.curTopMap[target.data('target')];
                 this.moving = true;
             }
@@ -649,7 +648,9 @@
         touchMove: function(e, target) {
             if (!this.moving) return false;
 
-            var offsetTop = this.getTouchPos(e.originalEvent.touches[0]);
+            e.preventDefault();
+
+            var offsetTop = e.originalEvent.touches[0].pageY;
 
             this.curTopMap[target.data('target')] = offsetTop - this.touchY;
             target.css('transform', 'translate3d(0px, ' + this.curTopMap[target.data('target')] + 'px, 0px)');
@@ -661,7 +662,6 @@
         touchEnd: function(e, target) {
             if (!this.moving) return false;
 
-            e.stopPropagation();
             this.freezing = true;
 
             var scope = this,
@@ -789,13 +789,6 @@
                 count = itemIndex - 2;
 
             this.translateYUpdate(parent, -(CHILD_HEIGHT * count));
-        },
-
-        /*
-         * get the touch point's postion
-         */
-        getTouchPos: function(e) {
-            return Math.max(document.body.scrollTop, document.documentElement.scrollTop) + e.clientY;
         }
     };
 
