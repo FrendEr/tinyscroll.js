@@ -237,12 +237,18 @@
             hour = parseInt(hour || this.stateTree.hour);
             minute = parseInt(minute || this.stateTree.minute);
 
-            return year + '-' +
+            if (this.time) {
+                return year + '-' +
                     (month  > 9 ? month  : ('0' + month))  + '-' +
                     (day    > 9 ? day    : ('0' + day))    + ' ' +
                     (hour   > 9 ? hour   : ('0' + hour))   + ':' +
                     (minute > 9 ? minute : ('0' + minute)) + ':' +
                     '00';
+            } else {
+                return year + '-' +
+                    (month  > 9 ? month  : ('0' + month))  + '-' +
+                    (day    > 9 ? day    : ('0' + day));
+            }
         },
 
         /*
